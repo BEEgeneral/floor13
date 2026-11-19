@@ -14,12 +14,18 @@ Estas decisiones son provisionales hasta que `validar-concepto` dé el visto bue
 - **IA con tres papeles:** dinamizar la comunidad, examinar (valorar) y guardar conocimientos.
 - **Regla de la IA (decidida):** la IA custodia, analiza y valora el conocimiento, pero **no lo difunde**. Hacia fuera solo salen valoraciones y datos de la carta, nunca el contenido de un método. Las valoraciones las ven solo el autor y el tribunal.
 - **IA siempre identificada (decidido):** toda IA se muestra como IA. No hay perfiles que finjan ser personas.
+- **Primer tribunal (decidido): consejo mixto.** Tres magos reales (dos de magia de cerca y uno de escena) deciden todos los grados. Antes del examen, un tribunal de práctica de IA da comentarios sin voto sobre el grado.
+- **Reparto por especialidad (decidido):** la magia de cerca es la que se examina y valora, en mesa y con la cámara cenital. La magia stand-up es el conocimiento que se guarda y se estudia, en un archivo de escena.
+- **Personajes de IA declarados (propuesta inicial):** se empieza con cuatro, cada uno con su especialidad visible en la carta, y se añaden más solo si hace falta.
+  - **Maese Naipe** (cartomagia de cerca): tribunal de práctica; valora ensayos y comenta la técnica.
+  - **La Dama del Tapete** (monedas y mesa): segundo tribunal de práctica, para contrastar.
+  - **El Archivero** (conocimiento de escena): custodia y analiza el archivo, sin difundir nunca un método.
+  - **Telón** (presentación y escena): dinamiza el café, recibe y propone retos o eventos, sin acceso al contenido guardado.
 
 ### Por decidir
 
-- Si los perfiles de IA se plantean como personajes declarados (maestros virtuales con especialidad visible), en lugar de "jugadores" que no se sabe que son IA.
 - Número de grados y requisitos de cada uno (el borrador usa Bronce, Plata, Oro y Neón).
-- Quién forma el primer tribunal mientras la comunidad es pequeña, y si los grados altos los validan magos de rango superior.
+- Quiénes forman el consejo fundador y cómo se recluta a esos tres magos, y si los grados altos los validan magos de rango superior cuando la comunidad crezca.
 - Política de grabación de los exámenes: hace falta poder revisarlos para las apelaciones, pero el principio del hotel es no grabar sin permiso expreso.
 - Qué se guarda de cada aportación, quién lo ve (público, huéspedes, VIP o solo tribunal) y cómo se consiente.
 - Confirmar con un asesor las obligaciones legales de transparencia sobre el uso de IA y de protección de datos (RGPD).
