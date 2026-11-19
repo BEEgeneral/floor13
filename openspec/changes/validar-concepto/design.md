@@ -33,7 +33,7 @@ Ver `proposal.md` (Why) para la motivación. El borrador `docs/DISENO.md` descri
 
 ## Open Questions
 
-- Umbral de la señal de compromiso: cuántas inscripciones o reservas cuentan como suficientes.
+- Plazo para alcanzar las 100 inscripciones, que no pueden salir solo de los 5 a 10 entrevistados y exigen una convocatoria abierta.
 - Método concreto para medir la latencia en la prueba de cámara.
 - Cómo se recluta a los 5 a 10 magos a entrevistar y quién conduce las entrevistas.
 - Dónde se aloja la lista de espera sin desarrollar nada propio.

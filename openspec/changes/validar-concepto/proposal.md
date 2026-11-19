@@ -16,7 +16,8 @@ Floor 13 Magic Hotel (ver `docs/DISENO.md`) descansa en dos supuestos que aún n
   1. La mitad o más de los magos entrevistados dice que enseñaría o aprendería en este formato.
   2. La prueba de cámara cumple los objetivos técnicos.
   3. Hay una señal de compromiso real (lista de espera o sesión de prueba reservada), porque el interés declarado no demuestra disposición a pagar.
-  - Quedan por concretar los umbrales de la señal de compromiso (cuántas inscripciones o reservas cuentan) y el número exacto de entrevistas.
+  - Umbral de la señal de compromiso (decidido): 100 inscripciones, lista de espera o sesión de prueba reservada, de personas distintas.
+  - Queda por concretar el plazo para alcanzarlo y el número exacto de entrevistas.
 
 ### Fuera de alcance
 
