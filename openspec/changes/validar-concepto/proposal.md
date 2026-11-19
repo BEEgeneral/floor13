@@ -17,7 +17,8 @@ Floor 13 Magic Hotel (ver `docs/DISENO.md`) descansa en dos supuestos que aún n
   2. La prueba de cámara cumple los objetivos técnicos.
   3. Hay una señal de compromiso real (lista de espera o sesión de prueba reservada), porque el interés declarado no demuestra disposición a pagar.
   - Umbral de la señal de compromiso (decidido): 100 inscripciones, lista de espera o sesión de prueba reservada, de personas distintas.
-  - Queda por concretar el plazo para alcanzarlo y el número exacto de entrevistas.
+  - Plazo (decidido): 4 meses desde el 19 de noviembre de 2026, con reunión de decisión el 19 de marzo de 2027.
+  - Queda por concretar el número exacto de entrevistas.
 
 ### Fuera de alcance
 

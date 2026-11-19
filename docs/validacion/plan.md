@@ -16,9 +16,14 @@ Se continúa solo si se cumplen las tres condiciones a la vez:
 - Una persona cuenta una sola vez, aunque se apunte por varios canales.
 - Las inscripciones tienen que venir también de personas que no son entrevistadas, así que hace falta una convocatoria abierta.
 
+## Plazo
+
+- **4 meses** para alcanzar el umbral, contados desde el 19 de noviembre de 2026.
+- **Reunión de decisión: 19 de marzo de 2027.** Si el plazo ha de contarse desde otra fecha, se actualiza aquí.
+- Las entrevistas y la prueba de cámara se hacen al principio del plazo, mientras la convocatoria sigue abierta.
+
 ## Pendiente de definir
 
-- Plazo para alcanzar el umbral y fecha de la reunión de decisión.
 - Método de medida de la latencia.
 - Cómo se recluta a los magos y quién conduce las entrevistas.
 - Dónde se aloja la lista de espera.

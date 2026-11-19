@@ -5,7 +5,7 @@
 - [x] 1.1 Fijar el umbral de la señal de compromiso (100 inscripciones) y verificar que queda escrito en `docs/validacion/plan.md`
 - [ ] 1.2 Elegir el método para medir la latencia y verificar que está descrito en `docs/validacion/plan.md` de forma que otra persona pueda repetirlo
 - [ ] 1.3 Decidir cómo se recluta a los magos y quién conduce las entrevistas, y verificar que consta en el plan
-- [ ] 1.4 Fijar la fecha límite de la reunión de decisión y verificar que consta en el plan
+- [x] 1.4 Fijar la fecha límite de la reunión de decisión (19 de marzo de 2027) y verificar que consta en el plan
 
 ## 2. Entrevistas a magos
 
