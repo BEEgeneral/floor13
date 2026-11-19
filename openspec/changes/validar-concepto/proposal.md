@@ -12,10 +12,11 @@ Floor 13 Magic Hotel (ver `docs/DISENO.md`) descansa en dos supuestos que aún n
   - Maqueta sin código, opcional, para enseñar la idea.
 - Se establece que **no se desarrolla el hotel hasta que la validación dé una respuesta** de continuar o parar.
 - Se fijan los objetivos técnicos de la prueba de cámara, propuestos en el borrador y pendientes de confirmar: latencia de 400 ms o menos, una carta legible en el 80 % central del tapete y 20 minutos sin cortes.
-- **Criterio de "seguimos": pendiente de decidir.** Opciones en discusión:
-  1. El del borrador: la mitad de los magos entrevistados dice que enseñaría o aprendería en este formato, y la cámara cumple los objetivos.
-  2. El del borrador más una señal de compromiso real (lista de espera o sesión de prueba reservada), porque el interés declarado no demuestra disposición a pagar.
-  3. Otro criterio, incluido uno más exigente como una prueba de pago.
+- **Criterio de "seguimos" (decidido):** se continúa solo si se cumplen las tres condiciones a la vez:
+  1. La mitad o más de los magos entrevistados dice que enseñaría o aprendería en este formato.
+  2. La prueba de cámara cumple los objetivos técnicos.
+  3. Hay una señal de compromiso real (lista de espera o sesión de prueba reservada), porque el interés declarado no demuestra disposición a pagar.
+  - Quedan por concretar los umbrales de la señal de compromiso (cuántas inscripciones o reservas cuentan) y el número exacto de entrevistas.
 
 ### Fuera de alcance
 
@@ -27,8 +28,8 @@ Floor 13 Magic Hotel (ver `docs/DISENO.md`) descansa en dos supuestos que aún n
 
 ### New Capabilities
 
-<!-- Ninguna por ahora. Esta fase define un proceso de decisión, no un comportamiento del sistema.
-     Queda pendiente decidir si el cambio debe declarar capacidades o marcarse con skip_specs. -->
+<!-- Ninguna. Esta fase define un proceso de decisión, no un comportamiento del sistema,
+     por lo que el cambio se marca con skip_specs: true en su .openspec.yaml. -->
 
 ### Modified Capabilities
 
