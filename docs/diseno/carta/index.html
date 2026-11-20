@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Floor 13 · Cartas de mago (maqueta)</title>
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 32px 16px 56px;
+    background: radial-gradient(1200px 600px at 50% -10%, #12313a 0%, #0a0f14 60%);
+    color: #d8e2ea; font-family: 'Fira Sans', 'DejaVu Sans', system-ui, sans-serif;
+  }
+  header { max-width: 980px; margin: 0 auto 28px; }
+  h1 { margin: 0 0 6px; font-family: 'Cardo', Georgia, serif; font-size: 30px; letter-spacing: .5px; }
+  header p { margin: 0; color: #93a6b4; line-height: 1.5; max-width: 70ch; }
+  .grid { display: flex; flex-wrap: wrap; gap: 28px 22px; justify-content: center; max-width: 1200px; margin: 0 auto; }
+  figure { margin: 0; width: 300px; }
+  figure svg { width: 100%; height: auto; display: block; overflow: visible; }
+  figcaption { margin-top: 8px; font-size: 13px; color: #93a6b4; line-height: 1.45; text-align: center; }
+  figcaption b { color: #e7eef3; }
+  .notes { max-width: 980px; margin: 36px auto 0; padding: 18px 22px; border: 1px solid #1f3b45; border-radius: 12px; background: rgba(15,40,48,.45); }
+  .notes h2 { margin: 0 0 8px; font-size: 16px; }
+  .notes li { margin: 5px 0; color: #b4c4cf; line-height: 1.45; }
+  code { background: #0d2128; padding: 1px 6px; border-radius: 5px; color: #9be9f6; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Floor 13 · Cartas de mago</h1>
+  <p>Maqueta de la carta: cuatro atributos, cinco estados (Bronce, Plata, Oro, Neón y carta en blanco). Cada carta se dibuja desde datos: el nivel y el color salen de las cuatro notas del examen. Los nombres son inventados.</p>
+</header>
+
+<main class="grid" id="grid"></main>
+
+<section class="notes">
+  <h2>Cómo se genera</h2>
+  <ul>
+    <li><b>Datos → carta.</b> El nivel es <code>0,30·TÉC + 0,30·PRE + 0,25·CRE + 0,15·ENS</code> y el tramo (Bronce, Plata, Oro, Neón) se calcula solo. Para cambiar un dato basta con editar <code>MAGOS</code> en este archivo.</li>
+    <li><b>Texto real.</b> Nombre, notas y etiquetas son texto, no imagen: siempre se leen y se actualizan al subir de nivel.</li>
+    <li><b>Arte hecho por código.</b> Escudo, ráfaga, sellos mágicos, iconos y avatar son vectores (SVG). No hay imágenes de IA por carta.</li>
+    <li><b>Para compartir como PNG</b> (más adelante): renderizar la misma carta en el servidor y guardarla como imagen.</li>
+  </ul>
+</section>
+
+<script>
+/* ---------- Datos de ejemplo (nombres inventados) ---------- */
+const MAGOS = [
+  { name: 'Marco Velo',  esp: 'moneda',   pais: 'MX', escuela: ['Taller del Eco', 'T'],  stats: { tec: 55, pre: 50, cre: 52, ens: 48 }, sellos: [] },
+  { name: 'Irene Sol',   esp: 'ojo',      pais: 'AR', escuela: ['Casa Umbral', 'U'],     stats: { tec: 70, pre: 66, cre: 68, ens: 64 }, sellos: ['verificado'] },
+  { name: 'Lucía Arcana', esp: 'naipe',   pais: 'ES', escuela: ['Escuela del Alba', 'A'], stats: { tec: 84, pre: 80, cre: 83, ens: 79 }, sellos: ['verificado', 'ensena'] },
+  { name: 'Teo Bruma',   esp: 'cubilete', pais: 'ES', escuela: ['Círculo Norte', 'N'],   stats: { tec: 94, pre: 92, cre: 93, ens: 90 }, sellos: ['verificado', 'ensena', 'fundador'] },
+  { name: 'Por revelar', esp: 'naipe',    pais: 'ES', escuela: ['Sin escuela', '?'],     stats: null, sellos: [] },
+];
+
+const PESOS = { tec: 0.30, pre: 0.30, cre: 0.25, ens: 0.15 };
+const ATTRS = [
+  { k: 'tec', label: 'TÉCNICA',      glyph: 'dedos' },
+  { k: 'pre', label: 'PRESENTACIÓN', glyph: 'telon' },
+  { k: 'cre', label: 'CREATIVIDAD',  glyph: 'chispa' },
+  { k: 'ens', label: 'ENSEÑANZA',    glyph: 'libro' },
+];
+const ESPECIALIDAD = { naipe: 'CARTOMAGIA', moneda: 'MICROMAGIA', ojo: 'MENTALISMO DE CERCA', cubilete: 'CERCA GENERAL' };
+const BANDERAS = {
+  ES: { dir: 'h', cols: ['#aa151b', '#f1bf00', '#aa151b'], pesos: [1, 2, 1] },
+  AR: { dir: 'h', cols: ['#74acdf', '#ffffff', '#74acdf'], pesos: [1, 1, 1] },
+  MX: { dir: 'v', cols: ['#006847', '#ffffff', '#ce1126'], pesos: [1, 1, 1] },
+};
+
+const TIERS = {
+  bronce: { label: 'BRONCE', frameA: '#f0b184', frameB: '#8a5a38', top: '#4a3326', bot: '#1d1411', glow: '#ff9a4d', glow2: '#d9562b', text: '#f6dcc0', sigil: '#e0a070' },
+  plata:  { label: 'PLATA',  frameA: '#f2f6fb', frameB: '#8794a6', top: '#33404f', bot: '#141a22', glow: '#9cc0ff', glow2: '#5b78d6', text: '#f1f5fa', sigil: '#cfd8e3' },
+  oro:    { label: 'ORO',    frameA: '#ffe08a', frameB: '#b8862b', top: '#43361f', bot: '#1b1409', glow: '#ffbe5c', glow2: '#e0742e', text: '#fff1c9', sigil: '#f2c14e' },
+  neon:   { label: 'NEÓN',   frameA: '#8ff6ff', frameB: '#1fa9c4', top: '#14606a', bot: '#06242a', glow: '#ff7a63', glow2: '#e0457b', text: '#f6dfa0', sigil: '#5fe9ff' },
+  blanco: { label: 'EN PROGRESO', frameA: '#a9b6c4', frameB: '#5b6672', top: '#272f38', bot: '#12161a', glow: '#6b7886', glow2: '#3b4550', text: '#b9c3cf', sigil: '#7d8a99' },
+};
+
+/* ---------- Utilidades ---------- */
+const nivel = s => Math.round(Object.keys(PESOS).reduce((a, k) => a + PESOS[k] * s[k], 0));
+const tramo = n => n >= 90 ? 'neon' : n >= 75 ? 'oro' : n >= 60 ? 'plata' : 'bronce';
+const hex = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+const mix = (a, b, t) => '#' + hex(a).map((v, i) => Math.round(v + (hex(b)[i] - v) * t).toString(16).padStart(2, '0')).join('');
+function rng(seed) { return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+
+const SHIELD = 'M200,20 L340,56 Q348,58 348,68 L348,470 Q348,480 340,487 L214,540 Q200,546 186,540 L60,487 Q52,480 52,470 L52,68 Q52,58 60,56 Z';
+
+/* ---------- Iconos (caja de -16 a 16) ---------- */
+const ICONOS = {
+  naipe: '<rect x="-10" y="-14" width="20" height="28" rx="3.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M0,-7 L6,0 L0,7 L-6,0Z" fill="currentColor"/>',
+  moneda: '<circle r="13" fill="none" stroke="currentColor" stroke-width="2.2"/><circle r="7.5" fill="none" stroke="currentColor" stroke-width="1.6"/><circle r="1.8" fill="currentColor"/>',
+  ojo: '<path d="M-15,0 Q0,-14 15,0 Q0,14 -15,0Z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><circle r="5.2" fill="none" stroke="currentColor" stroke-width="2"/><circle r="1.9" fill="currentColor"/>',
+  cubilete: '<path d="M-10,-12 L10,-12 L7,12 L-7,12Z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><path d="M-9,-6 H9" stroke="currentColor" stroke-width="1.6"/><circle cx="13" cy="9" r="3.6" fill="currentColor"/>',
+};
+const GLIFOS = { // caja de -8 a 8
+  dedos: '<path d="M-5,6 V-1 M-2,6 V-5 M1,6 V-6.5 M4,6 V-3 M-5,6 H4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
+  telon: '<path d="M-7,-6 H7 M-6,-6 Q-2,0 -6,6 M6,-6 Q2,0 6,6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
+  chispa: '<path d="M0,-8 L2,-2 L8,0 L2,2 L0,8 L-2,2 L-8,0 L-2,-2Z" fill="currentColor"/>',
+  libro: '<path d="M-8,-5 Q-4,-7 0,-4 Q4,-7 8,-5 V5 Q4,3 0,6 Q-4,3 -8,5Z M0,-4 V6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>',
+  verificado: '<path d="M-5.5,0.5 L-1.5,4.5 L6,-4" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>',
+  ensena: '<path d="M-8,-5 Q-4,-7 0,-4 Q4,-7 8,-5 V5 Q4,3 0,6 Q-4,3 -8,5Z M0,-4 V6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>',
+  fundador: '<path d="M-7,5 L-7,-3 L-3.5,0 L0,-6 L3.5,0 L7,-3 L7,5Z" fill="currentColor"/>',
+};
+
+/* ---------- Avatar (vector) ---------- */
+function avatar(blank) {
+  const c = blank
+    ? { jacket: '#3a444f', lapel: '#313a44', shirt: '#46515c', skin: '#46515c', hair: '#2c343c', bow: '#2a323a' }
+    : { jacket: '#8f1f45', lapel: '#5e1230', shirt: '#f4efe6', skin: '#e6b68f', hair: '#2b1c16', bow: '#15151a' };
+  const cara = blank ? '' : `
+    <ellipse cx="214" cy="150" rx="2.6" ry="3.2" fill="#2a1d17"/><ellipse cx="236" cy="150" rx="2.6" ry="3.2" fill="#2a1d17"/>
+    <path d="M208,142 Q214,139 220,141 M230,141 Q236,139 242,142" fill="none" stroke="#2a1d17" stroke-width="2" stroke-linecap="round"/>
+    <path d="M217,166 Q225,171 233,166" fill="none" stroke="#a5604a" stroke-width="2" stroke-linecap="round"/>`;
+  return `
+    <path d="M166,240 L152,330" stroke="${c.jacket}" stroke-width="28" stroke-linecap="round"/>
+    <path d="M148,330 L154,238 Q166,214 205,208 L245,208 Q284,214 296,238 L302,330 Z" fill="${c.jacket}"/>
+    <rect x="212" y="168" width="26" height="44" rx="9" fill="${c.skin}"/>
+    <path d="M204,208 L225,268 L246,208 Z" fill="${c.shirt}"/>
+    <path d="M204,208 L225,268 L196,250 L186,222 Z" fill="${c.lapel}"/>
+    <path d="M246,208 L225,268 L254,250 L264,222 Z" fill="${c.lapel}"/>
+    <path d="M225,215 L210,207 L210,223 Z M225,215 L240,207 L240,223 Z" fill="${c.bow}"/><circle cx="225" cy="215" r="3.2" fill="${c.bow}"/>
+    <ellipse cx="225" cy="148" rx="29" ry="35" fill="${c.skin}"/>
+    <path d="M195,146 Q192,108 225,106 Q258,108 255,146 Q250,126 225,124 Q200,126 195,146Z" fill="${c.hair}"/>
+    ${cara}
+    <path d="M284,236 L318,214" stroke="${c.jacket}" stroke-width="28" stroke-linecap="round"/>
+    <circle cx="326" cy="206" r="13" fill="${blank ? '#4a5560' : '#f7f4ee'}"/>
+    <line x1="326" y1="206" x2="346" y2="168" stroke="${blank ? '#3a444f' : '#16161a'}" stroke-width="4" stroke-linecap="round"/>
+    ${blank ? '' : '<line x1="342" y1="175" x2="346" y2="168" stroke="#fff" stroke-width="4" stroke-linecap="round"/>'}`;
+}
+
+/* ---------- Carta ---------- */
+function carta(m, i) {
+  const blank = !m.stats;
+  const ovr = blank ? null : nivel(m.stats);
+  const key = blank ? 'blanco' : tramo(ovr);
+  const t = TIERS[key];
+  const R = rng(1000 + i * 77);
+  const bodyAt = y => mix(t.top, t.bot, Math.min(1, Math.max(0, (y - 20) / 526)));
+  const fade = bodyAt(322);
+  const bandera = BANDERAS[m.pais];
+  const neon = key === 'neon';
+
+  // partículas
+  let particulas = '';
+  for (let n = 0; n < 26; n++) {
+    const x = R() * 400, y = R() * 560, r = 0.8 + R() * 2.4;
+    particulas += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(1)}" fill="${n % 3 ? t.glow : t.sigil}" opacity="${(0.35 + R() * 0.55).toFixed(2)}"/>`;
+  }
+  // rayos detrás del mago
+  let rayos = '';
+  for (let a = 0; a < 18; a++) {
+    const a0 = (a / 18) * Math.PI * 2, a1 = a0 + Math.PI / 36;
+    const p = (ang, rad) => `${(225 + Math.cos(ang) * rad).toFixed(1)},${(160 + Math.sin(ang) * rad).toFixed(1)}`;
+    rayos += `<polygon points="225,160 ${p(a0, 340)} ${p(a1, 340)}" fill="${t.glow}" opacity=".10"/>`;
+  }
+  // sello mágico (círculo con marcas)
+  const sello = (cx, cy, r, op) => {
+    let marcas = '';
+    for (let k = 0; k < 12; k++) {
+      const a = (k / 12) * Math.PI * 2;
+      marcas += `<line x1="${(cx + Math.cos(a) * (r - 5)).toFixed(1)}" y1="${(cy + Math.sin(a) * (r - 5)).toFixed(1)}" x2="${(cx + Math.cos(a) * r).toFixed(1)}" y2="${(cy + Math.sin(a) * r).toFixed(1)}"/>`;
+    }
+    const e = [0, 1, 2, 3, 4].map(k => { const a = -Math.PI / 2 + k * 4 * Math.PI / 5; return `${(cx + Math.cos(a) * (r - 9)).toFixed(1)},${(cy + Math.sin(a) * (r - 9)).toFixed(1)}`; }).join(' ');
+    return `<g fill="none" stroke="${t.sigil}" stroke-width="1.6" opacity="${op}"><circle cx="${cx}" cy="${cy}" r="${r}"/><circle cx="${cx}" cy="${cy}" r="${r - 6}" stroke-width="1"/>${marcas}<polygon points="${e}" stroke-width="1.2"/></g>`;
+  };
+
+  const filas = ATTRS.map((a, n) => {
+    const y = 392 + n * 32;
+    const v = blank ? '—' : m.stats[a.k];
+    return `
+      <g transform="translate(0 ${y})">
+        <circle cx="127" cy="0" r="12" fill="${t.frameB}" opacity=".35"/>
+        <circle cx="127" cy="0" r="12" fill="none" stroke="${t.frameA}" stroke-width="1.4" opacity=".9"/>
+        <g transform="translate(127 0)" color="${t.frameA}">${GLIFOS[a.glyph]}</g>
+        <text x="149" y="5" class="lbl" fill="${t.text}">${a.label}</text>
+        <text x="286" y="8" class="num" text-anchor="end" fill="${t.text}">${v}</text>
+        <line x1="112" y1="16" x2="288" y2="16" stroke="${t.frameA}" stroke-opacity=".25" stroke-width="1"/>
+      </g>`;
+  }).join('');
+
+  const sellos = m.sellos.slice(0, 3).map((s, n) => `
+      <g transform="translate(${140 + n * 24} 166)">
+        <circle r="10" fill="${t.frameB}" opacity=".5"/><circle r="10" fill="none" stroke="${t.frameA}" stroke-width="1.3"/>
+        <g color="${t.frameA}" transform="scale(.8)">${GLIFOS[s]}</g>
+      </g>`).join('');
+
+  const banderaSVG = (() => {
+    if (!bandera) return '';
+    const tot = bandera.pesos.reduce((a, b) => a + b, 0);
+    let acc = 0, out = '';
+    bandera.cols.forEach((col, n) => {
+      const parte = bandera.pesos[n] / tot;
+      out += bandera.dir === 'h'
+        ? `<rect x="76" y="${(190 + acc * 26).toFixed(1)}" width="40" height="${(parte * 26 + .3).toFixed(1)}" fill="${col}"/>`
+        : `<rect x="${(76 + acc * 40).toFixed(1)}" y="190" width="${(parte * 40 + .3).toFixed(1)}" height="26" fill="${col}"/>`;
+      acc += parte;
+    });
+    return out + `<rect x="76" y="190" width="40" height="26" fill="none" stroke="${t.frameA}" stroke-width="1.4" rx="2"/>`;
+  })();
+
+  const id = s => `${s}${i}`;
+  return `
+<svg viewBox="0 0 400 560" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Carta de ${m.name}${blank ? ', sin examinar' : ', nivel ' + ovr + ', ' + t.label}">
+  <style>
+    .lbl { font: 600 13px 'Fira Sans', 'DejaVu Sans', sans-serif; letter-spacing: .8px; }
+    .num { font: 400 25px 'Anton', 'Fira Sans', sans-serif; }
+    .big { font: 400 58px 'Anton', 'Fira Sans', sans-serif; }
+    .nom { font: 700 27px 'Cardo', Georgia, serif; letter-spacing: 2.4px; }
+    .sub { font: 600 11px 'Fira Sans', sans-serif; letter-spacing: 3px; }
+    .tag { font: 600 11px 'Fira Sans', sans-serif; letter-spacing: 3px; }
+  </style>
+  <defs>
+    <linearGradient id="${id('body')}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${t.top}"/><stop offset="1" stop-color="${t.bot}"/></linearGradient>
+    <linearGradient id="${id('frame')}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${t.frameA}"/><stop offset=".55" stop-color="${t.frameB}"/><stop offset="1" stop-color="${t.frameA}"/></linearGradient>
+    <radialGradient id="${id('burst')}" cx="225" cy="165" r="250" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="${t.glow}" stop-opacity=".9"/><stop offset=".45" stop-color="${t.glow2}" stop-opacity=".35"/><stop offset="1" stop-color="${t.glow2}" stop-opacity="0"/></radialGradient>
+    <radialGradient id="${id('halo')}" cx="225" cy="150" r="190" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="${t.glow}" stop-opacity=".75"/><stop offset=".6" stop-color="${t.glow2}" stop-opacity=".22"/><stop offset="1" stop-color="${t.glow2}" stop-opacity="0"/></radialGradient>
+    <linearGradient id="${id('fade')}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${fade}" stop-opacity="0"/><stop offset="1" stop-color="${fade}" stop-opacity="1"/></linearGradient>
+    <linearGradient id="${id('panel')}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity="0"/><stop offset=".12" stop-color="#000" stop-opacity=".34"/><stop offset="1" stop-color="#000" stop-opacity=".42"/></linearGradient>
+    <linearGradient id="${id('flame')}" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#fff2c2"/><stop offset=".45" stop-color="${t.glow}"/><stop offset="1" stop-color="${t.glow2}" stop-opacity=".1"/></linearGradient>
+    <linearGradient id="${id('sheen')}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".16"/><stop offset=".35" stop-color="#fff" stop-opacity="0"/></linearGradient>
+    <clipPath id="${id('clip')}"><path d="${SHIELD}"/></clipPath>
+    <filter id="${id('blur')}" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="9"/></filter>
+    <filter id="${id('glow')}" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="${neon ? 5 : 3}" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+
+  <!-- Escenario: ráfaga, cintas de energía, sellos y partículas fuera del escudo -->
+  <rect width="400" height="560" fill="url(#${id('burst')})" opacity="${blank ? .35 : 1}"/>
+  <g fill="none" stroke="${t.glow}" stroke-linecap="round" filter="url(#${id('blur')})" opacity=".75">
+    <path d="M22,330 C58,270 14,190 62,120" stroke-width="10"/><path d="M380,420 C352,350 392,290 352,220" stroke-width="9"/>
+  </g>
+  <g fill="none" stroke="${t.glow}" stroke-linecap="round" opacity=".85">
+    <path d="M22,330 C58,270 14,190 62,120" stroke-width="2.2"/><path d="M380,420 C352,350 392,290 352,220" stroke-width="2"/><path d="M12,250 C38,210 8,160 40,100" stroke-width="1.4"/>
+  </g>
+  ${sello(40, 78, 30, .7)}${sello(372, 300, 26, .6)}${sello(38, 470, 28, .6)}
+  ${particulas}
+
+  <!-- Escudo -->
+  <path d="${SHIELD}" fill="url(#${id('body')})" ${neon ? `filter="url(#${id('glow')})"` : ''}/>
+  <g clip-path="url(#${id('clip')})">
+    <path d="${SHIELD}" fill="url(#${id('body')})"/>
+    <rect x="40" y="10" width="320" height="330" fill="url(#${id('halo')})" opacity="${blank ? .5 : 1}"/>
+    ${rayos}
+    ${sello(225, 160, 118, .35)}
+    <g ${blank ? '' : ''}>${avatar(blank)}</g>
+    <rect x="40" y="246" width="320" height="76" fill="url(#${id('fade')})"/>
+    <rect x="40" y="322" width="320" height="230" fill="url(#${id('panel')})"/>
+    <path d="M52,20 L348,20 L348,200 Z" fill="url(#${id('sheen')})"/>
+  </g>
+  <path d="${SHIELD}" fill="none" stroke="url(#${id('frame')})" stroke-width="5" stroke-linejoin="round" ${blank ? 'stroke-dasharray="14 7"' : ''}/>
+  <path d="${SHIELD}" transform="translate(200 283) scale(.945) translate(-200 -283)" fill="none" stroke="${t.frameA}" stroke-opacity=".5" stroke-width="1.4"/>
+
+  <!-- Elementos que rebasan el marco: sombrero flotante, llama y chispa de la varita -->
+  ${blank ? '' : `
+  <g filter="url(#${id('glow')})">
+    <path d="M285,56 C268,34 296,26 284,-4 C312,24 316,42 300,58Z" fill="url(#${id('flame')})" transform="translate(0 14)"/>
+    <path d="M346,150 l3,10 l10,3 l-10,3 l-3,10 l-3,-10 l-10,-3 l10,-3Z" fill="#fff6d8"/>
+  </g>
+  <g transform="translate(285 90) rotate(-12)">
+    <ellipse cx="0" cy="0" rx="35" ry="9" fill="#14141a"/>
+    <rect x="-22" y="-35" width="44" height="35" fill="#14141a"/>
+    <rect x="-22" y="-13" width="44" height="8" fill="#b3123a"/>
+    <ellipse cx="0" cy="-35" rx="22" ry="6.5" fill="#ffe7b8"/>
+  </g>`}
+
+  <!-- Columna izquierda -->
+  <text x="96" y="${blank ? 116 : 120}" class="big" text-anchor="middle" fill="${t.text}">${blank ? '?' : ovr}</text>
+  <text x="96" y="140" class="tag" text-anchor="middle" fill="${t.frameA}">${blank ? '' : t.label}</text>
+  <g transform="translate(96 166)" color="${t.frameA}">${ICONOS[m.esp]}</g>
+  ${banderaSVG}
+  <g transform="translate(96 244)">
+    <path d="M0,-18 L15,-12 V6 Q15,13 8,17 L0,21 L-8,17 Q-15,13 -15,6 V-12Z" fill="${t.frameB}" opacity=".45"/>
+    <path d="M0,-18 L15,-12 V6 Q15,13 8,17 L0,21 L-8,17 Q-15,13 -15,6 V-12Z" fill="none" stroke="${t.frameA}" stroke-width="1.5"/>
+    <text y="6" text-anchor="middle" fill="${t.text}" style="font: 700 17px 'Cardo', Georgia, serif">${m.escuela[1]}</text>
+  </g>
+  ${sellos}
+
+  <!-- Nombre y atributos -->
+  <text x="200" y="338" class="nom" text-anchor="middle" fill="${t.text}">${m.name.toUpperCase()}</text>
+  <text x="200" y="357" class="sub" text-anchor="middle" fill="${t.frameA}">${blank ? 'EN PROGRESO' : ESPECIALIDAD[m.esp]}</text>
+  <line x1="92" y1="368" x2="308" y2="368" stroke="${t.frameA}" stroke-opacity=".55" stroke-width="1.2"/>
+  ${filas}
+</svg>`;
+}
+
+const grid = document.getElementById('grid');
+MAGOS.forEach((m, i) => {
+  const blank = !m.stats;
+  const ovr = blank ? null : nivel(m.stats);
+  const t = TIERS[blank ? 'blanco' : tramo(ovr)];
+  const f = document.createElement('figure');
+  f.innerHTML = carta(m, i) + `<figcaption><b>${t.label}</b>${blank ? ' · carta sin revelar, sin número' : ` · nivel ${ovr}`}<br>${blank ? 'Aún no se ha examinado' : `0,30×${m.stats.tec} + 0,30×${m.stats.pre} + 0,25×${m.stats.cre} + 0,15×${m.stats.ens}`}</figcaption>`;
+  grid.appendChild(f);
+});
+</script>
+</body>
+</html>
