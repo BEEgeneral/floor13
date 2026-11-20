@@ -22,10 +22,18 @@ Estas decisiones son provisionales hasta que `validar-concepto` dé el visto bue
   - **El Archivero** (conocimiento de escena): custodia y analiza el archivo, sin difundir nunca un método.
   - **Telón** (presentación y escena): dinamiza el café, recibe y propone retos o eventos, sin acceso al contenido guardado.
 
+- **Consejo fundador (propuesta de perfiles):** tres puestos, cada uno cubierto por un mago real.
+  - **Maestro de mesa, cartomagia (presidente en exámenes de mesa):** trayectoria demostrable en magia de cerca con cartas y experiencia enseñando.
+  - **Maestro de mesa, monedas o mentalismo:** segunda mirada de cerca, con una especialidad distinta a la del presidente para contrastar.
+  - **Maestro de escena (stand-up):** responsable del archivo de escena y de validar el conocimiento.
+  - **Condiciones comunes:** trayectoria profesional demostrable, compromiso de confidencialidad sobre los métodos, no examinar a socios ni a familiares, y una disponibilidad mínima mensual (por fijar).
+  - **Reclutamiento:** invitación directa a magos que muestren interés en las entrevistas de `validar-concepto` y a personas de asociaciones de magia. Se piden cartas de intención no vinculantes durante la validación y el nombramiento se confirma tras la reunión de decisión del 19 de marzo de 2027, para no comprometer a nadie antes de saber si el proyecto sigue.
+
 ### Por decidir
 
 - Número de grados y requisitos de cada uno (el borrador usa Bronce, Plata, Oro y Neón).
-- Quiénes forman el consejo fundador y cómo se recluta a esos tres magos, y si los grados altos los validan magos de rango superior cuando la comunidad crezca.
+- Años de trayectoria y horas mensuales que se piden a un fundador, y qué recibe a cambio (por ejemplo, sello de fundador y acceso VIP; la remuneración está por decidir).
+- Si los grados altos los validan magos de rango superior cuando la comunidad crezca y el consejo fundador deje de ser suficiente.
 - Política de grabación de los exámenes: hace falta poder revisarlos para las apelaciones, pero el principio del hotel es no grabar sin permiso expreso.
 - Qué se guarda de cada aportación, quién lo ve (público, huéspedes, VIP o solo tribunal) y cómo se consiente.
 - Confirmar con un asesor las obligaciones legales de transparencia sobre el uso de IA y de protección de datos (RGPD).
