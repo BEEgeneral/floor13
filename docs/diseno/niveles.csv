@@ -1,0 +1,102 @@
+nivel,tramo,rango,nombre,horas_acum,horas_siguiente
+0,Antesala,Curioso,Curioso I,0,0.0
+1,Antesala,Curioso,Curioso II,0,0.0
+2,Antesala,Curioso,Curioso III,0,0.0
+3,Antesala,Curioso,Curioso IV,0,0.1
+4,Antesala,Curioso,Curioso V,0,0.2
+5,Antesala,Curioso,Curioso VI,0,0.2
+6,Antesala,Curioso,Curioso VII,1,0.3
+7,Antesala,Curioso,Curioso VIII,1,0.4
+8,Antesala,Curioso,Curioso IX,1,0.5
+9,Antesala,Curioso,Curioso X,2,0.7
+10,Antesala,Aprendiz,Aprendiz I,2,0.8
+11,Antesala,Aprendiz,Aprendiz II,3,1.0
+12,Antesala,Aprendiz,Aprendiz III,4,1.2
+13,Antesala,Aprendiz,Aprendiz IV,5,1.4
+14,Antesala,Aprendiz,Aprendiz V,7,1.6
+15,Antesala,Aprendiz,Aprendiz VI,8,1.8
+16,Antesala,Aprendiz,Aprendiz VII,10,2.0
+17,Antesala,Aprendiz,Aprendiz VIII,12,2.3
+18,Antesala,Aprendiz,Aprendiz IX,15,2.6
+19,Antesala,Aprendiz,Aprendiz X,17,2.9
+20,Antesala,Manos Ligeras,Manos Ligeras I,20,3.2
+21,Antesala,Manos Ligeras,Manos Ligeras II,23,3.5
+22,Antesala,Manos Ligeras,Manos Ligeras III,27,3.8
+23,Antesala,Manos Ligeras,Manos Ligeras IV,30,4.1
+24,Antesala,Manos Ligeras,Manos Ligeras V,35,4.5
+25,Antesala,Manos Ligeras,Manos Ligeras VI,39,4.9
+26,Antesala,Manos Ligeras,Manos Ligeras VII,44,5.3
+27,Antesala,Manos Ligeras,Manos Ligeras VIII,49,5.7
+28,Antesala,Manos Ligeras,Manos Ligeras IX,55,6.1
+29,Antesala,Manos Ligeras,Manos Ligeras X,61,6.5
+30,Antesala,Aficionado de Salón,Aficionado de Salón I,68,7.0
+31,Antesala,Aficionado de Salón,Aficionado de Salón II,74,7.4
+32,Antesala,Aficionado de Salón,Aficionado de Salón III,82,7.9
+33,Antesala,Aficionado de Salón,Aficionado de Salón IV,90,8.4
+34,Antesala,Aficionado de Salón,Aficionado de Salón V,98,8.9
+35,Antesala,Aficionado de Salón,Aficionado de Salón VI,107,9.5
+36,Antesala,Aficionado de Salón,Aficionado de Salón VII,117,10.0
+37,Antesala,Aficionado de Salón,Aficionado de Salón VIII,127,10.5
+38,Antesala,Aficionado de Salón,Aficionado de Salón IX,137,11.1
+39,Antesala,Aficionado de Salón,Aficionado de Salón X,148,11.7
+40,Bronce,Mago de Mesa,Mago de Mesa I,160,12.3
+41,Bronce,Mago de Mesa,Mago de Mesa II,172,12.9
+42,Bronce,Mago de Mesa,Mago de Mesa III,185,13.5
+43,Bronce,Mago de Mesa,Mago de Mesa IV,199,14.2
+44,Bronce,Mago de Mesa,Mago de Mesa V,213,14.9
+45,Bronce,Mago de Mesa,Mago de Mesa VI,228,15.5
+46,Bronce,Mago de Mesa,Mago de Mesa VII,243,16.2
+47,Bronce,Mago de Mesa,Mago de Mesa VIII,260,16.9
+48,Bronce,Mago de Mesa,Mago de Mesa IX,276,17.6
+49,Bronce,Mago de Mesa,Mago de Mesa X,294,18.4
+50,Bronce,Artífice,Artífice I,312,19.1
+51,Bronce,Artífice,Artífice II,332,19.9
+52,Bronce,Artífice,Artífice III,352,20.7
+53,Bronce,Artífice,Artífice IV,372,21.5
+54,Bronce,Artífice,Artífice V,394,22.3
+55,Bronce,Artífice,Artífice VI,416,23.1
+56,Bronce,Artífice,Artífice VII,439,23.9
+57,Bronce,Artífice,Artífice VIII,463,24.8
+58,Bronce,Artífice,Artífice IX,488,25.7
+59,Bronce,Artífice,Artífice X,513,26.6
+60,Plata,Prestidigitador,Prestidigitador I,540,27.5
+61,Plata,Prestidigitador,Prestidigitador II,567,28.4
+62,Plata,Prestidigitador,Prestidigitador III,596,29.3
+63,Plata,Prestidigitador,Prestidigitador IV,625,30.2
+64,Plata,Prestidigitador,Prestidigitador V,655,31.2
+65,Plata,Prestidigitador,Prestidigitador VI,687,32.2
+66,Plata,Prestidigitador,Prestidigitador VII,719,33.2
+67,Plata,Ilusionista,Ilusionista I,752,34.2
+68,Plata,Ilusionista,Ilusionista II,786,35.2
+69,Plata,Ilusionista,Ilusionista III,821,36.2
+70,Plata,Ilusionista,Ilusionista IV,858,37.3
+71,Plata,Ilusionista,Ilusionista V,895,38.3
+72,Plata,Ilusionista,Ilusionista VI,933,39.4
+73,Plata,Ilusionista,Ilusionista VII,973,40.5
+74,Plata,Ilusionista,Ilusionista VIII,1013,41.6
+75,Oro,Maestro de Mesa,Maestro de Mesa I,1055,42.8
+76,Oro,Maestro de Mesa,Maestro de Mesa II,1097,43.9
+77,Oro,Maestro de Mesa,Maestro de Mesa III,1141,45.0
+78,Oro,Maestro de Mesa,Maestro de Mesa IV,1186,46.2
+79,Oro,Maestro de Mesa,Maestro de Mesa V,1233,47.4
+80,Oro,Maestro de Mesa,Maestro de Mesa VI,1280,48.6
+81,Oro,Maestro de Mesa,Maestro de Mesa VII,1329,49.8
+82,Oro,Maestro de Mesa,Maestro de Mesa VIII,1378,51.0
+83,Oro,Gran Ilusionista,Gran Ilusionista I,1429,52.3
+84,Oro,Gran Ilusionista,Gran Ilusionista II,1482,53.6
+85,Oro,Gran Ilusionista,Gran Ilusionista III,1535,54.8
+86,Oro,Gran Ilusionista,Gran Ilusionista IV,1590,56.1
+87,Oro,Gran Ilusionista,Gran Ilusionista V,1646,57.4
+88,Oro,Gran Ilusionista,Gran Ilusionista VI,1704,58.7
+89,Oro,Gran Ilusionista,Gran Ilusionista VII,1762,60.1
+90,Neón,Archimago,Archimago I,1822,61.4
+91,Neón,Archimago,Archimago II,1884,62.8
+92,Neón,Archimago,Archimago III,1947,64.2
+93,Neón,Archimago,Archimago IV,2011,65.6
+94,Neón,Archimago,Archimago V,2076,67.0
+95,Neón,Gran Maestro,Gran Maestro I,2143,68.4
+96,Neón,Gran Maestro,Gran Maestro II,2212,69.8
+97,Neón,Gran Maestro,Gran Maestro III,2282,71.3
+98,Neón,Gran Maestro,Gran Maestro IV,2353,72.8
+99,Neón,Gran Maestro,Gran Maestro V,2426,74.3
+100,Neón,Leyenda de la Planta 13,Leyenda de la Planta 13,2500,0
