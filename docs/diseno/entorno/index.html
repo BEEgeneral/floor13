@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Floor 13 · Ficha de estilo del hotel</title>
+<style>
+  :root { color-scheme: dark; --bg:#0b0a0d; --ink:#e8dfcf; --mut:#a79c88; --gold:#d6a84a; }
+  * { box-sizing: border-box; }
+  body { margin:0; padding:32px 16px 64px; background:radial-gradient(1200px 600px at 50% -10%,#2a1318 0%,#0b0a0d 62%); color:var(--ink); font-family:'Fira Sans','DejaVu Sans',system-ui,sans-serif; }
+  .wrap { max-width:1040px; margin:0 auto; }
+  h1 { font-family:'Cardo',Georgia,serif; font-size:32px; margin:0 0 6px; letter-spacing:.5px; }
+  h2 { font-family:'Cardo',Georgia,serif; font-size:21px; margin:38px 0 6px; color:var(--gold); }
+  p, li { color:var(--mut); line-height:1.55; max-width:78ch; }
+  .sw { display:flex; flex-wrap:wrap; gap:10px; margin-top:12px; }
+  .sw div { width:118px; border-radius:10px; overflow:hidden; border:1px solid #2b2420; background:#14100f; font-size:12px; }
+  .sw i { display:block; height:54px; }
+  .sw span { display:block; padding:6px 8px; color:var(--ink); } .sw small { display:block; color:var(--mut); font-size:11px; }
+  svg { width:100%; height:auto; display:block; border-radius:14px; border:1px solid #2b2420; }
+  .two { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.9fr); gap:18px; align-items:start; }
+  @media (max-width:760px){ .two{grid-template-columns:1fr;} }
+  code { background:#1a1410; padding:1px 6px; border-radius:5px; color:#f0cf86; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Floor 13 · Ficha de estilo del hotel</h1>
+  <p>Hotel barroco del siglo XVII, elegante y sombrío, con un ascensor eléctrico de inspiración Tesla. Pieza modelo: la <b>Planta 13</b>, sala de exámenes y de conferencias. Dibujo hecho por código como referencia de estilo: es una guía para producir el arte final, no el arte final.</p>
+
+  <h2>Paleta y materiales</h2>
+  <div class="sw" id="sw"></div>
+  <ul>
+    <li><b>Forma:</b> arcos, molduras doradas, columnas, simetría. Todo lo importante (mesa, ascensor, tribunal) en el centro.</li>
+    <li><b>Luz:</b> cálida de velas y lámparas de latón. La única luz fría es la eléctrica del ascensor y de las bobinas, para que lo "mágico-científico" llame la atención.</li>
+    <li><b>Materiales:</b> madera oscura, terciopelo granate, mármol blanco y negro, latón envejecido, cristal.</li>
+    <li><b>Planta 13:</b> acento teal y neón, el mismo de la carta Neón. Cada planta tiene su color de acento.</li>
+  </ul>
+
+  <h2>Planta 13 · sala de exámenes (vista desde arriba en ángulo)</h2>
+  <svg id="room" viewBox="0 0 960 600" role="img" aria-label="Sala de exámenes de la Planta 13"></svg>
+  <ul>
+    <li>En el centro, la <b>mesa de examen</b> con tapete y la cámara cenital de latón encima, que enfoca la mesa.</li>
+    <li>A la izquierda el <b>tribunal</b> (tres sillones) y a la derecha las <b>butacas del público</b>. El ascensor al fondo es la única puerta.</li>
+    <li>Tamaño de baldosa de referencia: 48 px. Un personaje mide unos 48 px de alto.</li>
+  </ul>
+
+  <h2>El ascensor</h2>
+  <div class="two">
+    <svg id="lift" viewBox="0 0 360 520" role="img" aria-label="Ascensor eléctrico"></svg>
+    <div>
+      <p>Jaula de latón con puerta de tijera y arco barroco. Encima, dos bobinas con toroide que lanzan arcos de electricidad cian. El indicador es un reloj de aguja con las plantas clave: 0, 13, 40, 60, 75, 90 y 100.</p>
+      <ul>
+        <li><b>El 13 siempre brilla,</b> aunque la aguja esté en otra planta: es el reclamo del hotel.</li>
+        <li><b>El botón 13 aparece</b> cuando el mago tiene llave de examen o una invitación a una charla.</li>
+        <li><b>Al subir de nivel,</b> la aguja gira y las bobinas chispean. Es el momento de celebración del juego.</li>
+        <li>Lo "Tesla" está en la luz y la electricidad, no en un traje de época. Así no choca con el barroco.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>Siguientes piezas</h2>
+  <p>Con este estilo aprobado: Vestíbulo (planta 0), Gran Salón (planta 1), café y avatares. Cada estancia se juzga a tamaño real de juego antes de seguir (flujo de la skill <code>create-game-assets</code>).</p>
+</div>
+
+<script>
+const PAL = [
+  ['Ébano','#1b1210','Madera y marcos'], ['Granate','#6b1a2c','Terciopelo, tapices'], ['Latón','#c8993e','Molduras, lámparas'],
+  ['Marfil','#efe4cf','Mármol claro'], ['Noche','#0f0d12','Sombras'], ['Cian eléctrico','#6ff0ff','Arcos, Planta 13'], ['Teal','#14606a','Tapete de examen'],
+];
+document.getElementById('sw').innerHTML = PAL.map(([n,c,u])=>`<div><i style="background:${c}"></i><span>${n}<small>${c} · ${u}</small></span></div>`).join('');
+
+function rng(seed){return()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+function arc(x1,y1,x2,y2,seed,n=9,amp=9){ const R=rng(seed); let d=`M${x1},${y1}`; for(let i=1;i<n;i++){const t=i/n; d+=` L${(x1+(x2-x1)*t+(R()-.5)*amp*2).toFixed(1)},${(y1+(y2-y1)*t+(R()-.5)*amp*2).toFixed(1)}`;} return d+` L${x2},${y2}`; }
+const bolt=(x1,y1,x2,y2,seed,w=2)=>`<path d="${arc(x1,y1,x2,y2,seed)}" fill="none" stroke="#c9fbff" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round" filter="url(#glow)"/>`;
+const defs=`<defs>
+ <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+ <filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="14"/></filter>
+ <linearGradient id="brass" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7a5a22"/><stop offset=".35" stop-color="#e8c36a"/><stop offset=".6" stop-color="#c8993e"/><stop offset="1" stop-color="#6e4f1c"/></linearGradient>
+ <linearGradient id="brassV" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8c36a"/><stop offset="1" stop-color="#7a5a22"/></linearGradient>
+ <linearGradient id="wood" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a1b15"/><stop offset="1" stop-color="#150e0b"/></linearGradient>
+ <linearGradient id="velvet" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#4d1120"/><stop offset=".5" stop-color="#7d2236"/><stop offset="1" stop-color="#4d1120"/></linearGradient>
+ <radialGradient id="warm" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ffcf7a" stop-opacity=".55"/><stop offset="1" stop-color="#ffcf7a" stop-opacity="0"/></radialGradient>
+ <radialGradient id="cyan" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#6ff0ff" stop-opacity=".6"/><stop offset="1" stop-color="#6ff0ff" stop-opacity="0"/></radialGradient>
+ <pattern id="marble" width="96" height="96" patternUnits="userSpaceOnUse"><rect width="96" height="96" fill="#e6dac2"/><rect width="48" height="48" fill="#17120f"/><rect x="48" y="48" width="48" height="48" fill="#17120f"/><path d="M6,70 q20,-14 36,4 M60,20 q14,10 28,-2" stroke="#fff" stroke-opacity=".25" fill="none"/></pattern>
+ <pattern id="panel" width="64" height="150" patternUnits="userSpaceOnUse"><rect width="64" height="150" fill="url(#wood)"/><rect x="8" y="14" width="48" height="122" rx="3" fill="none" stroke="#c8993e" stroke-opacity=".55" stroke-width="2"/><rect x="14" y="20" width="36" height="110" rx="2" fill="none" stroke="#000" stroke-opacity=".35"/></pattern>
+</defs>`;
+
+/* ---------- Elementos ---------- */
+const candelabro=(x,y)=>`<g transform="translate(${x} ${y})"><ellipse cx="0" cy="-34" rx="46" ry="46" fill="url(#warm)"/><ellipse cx="0" cy="14" rx="14" ry="5" fill="#000" opacity=".4"/>
+ <rect x="-3" y="-20" width="6" height="34" fill="url(#brass)"/><path d="M-16,-22 q16,16 32,0" fill="none" stroke="#c8993e" stroke-width="3"/>
+ ${[-16,0,16].map(i=>`<rect x="${i-2}" y="-34" width="4" height="12" fill="#f4ead2"/><path d="M${i},-46 q5,8 0,12 q-5,-4 0,-12Z" fill="#ffd36a" filter="url(#glow)"/>`).join('')}</g>`;
+const silla=(x,y,flip=1,col='url(#velvet)')=>`<g transform="translate(${x} ${y}) scale(${flip} 1)"><ellipse cx="0" cy="22" rx="22" ry="6" fill="#000" opacity=".4"/>
+ <rect x="-18" y="-26" width="36" height="34" rx="8" fill="${col}" stroke="#c8993e" stroke-width="2"/><rect x="-20" y="2" width="40" height="18" rx="6" fill="${col}" stroke="#c8993e" stroke-width="2"/></g>`;
+const persona=(x,y,c,sombrero=true)=>`<g transform="translate(${x} ${y})"><ellipse cx="0" cy="22" rx="12" ry="4" fill="#000" opacity=".4"/>
+ <rect x="-9" y="-6" width="18" height="26" rx="6" fill="${c}"/><circle cx="0" cy="-14" r="8" fill="#e2b48e"/>${sombrero?`<rect x="-7" y="-30" width="14" height="14" fill="#15131a"/><ellipse cx="0" cy="-17" rx="11" ry="3" fill="#15131a"/>`:''}</g>`;
+function bobina(x,y,s=1){return `<g transform="translate(${x} ${y}) scale(${s})"><ellipse cx="0" cy="0" rx="22" ry="7" fill="#000" opacity=".4"/>
+ <rect x="-14" y="-12" width="28" height="12" rx="3" fill="url(#brass)"/><rect x="-6" y="-86" width="12" height="76" fill="url(#brass)"/>
+ ${[-70,-56,-42,-28].map(h=>`<ellipse cx="0" cy="${h}" rx="11" ry="3.5" fill="none" stroke="#8a5f2a" stroke-width="2.2"/>`).join('')}
+ <ellipse cx="0" cy="-96" rx="26" ry="11" fill="url(#brass)"/><ellipse cx="0" cy="-96" rx="26" ry="11" fill="none" stroke="#fff3c4" stroke-opacity=".45"/><ellipse cx="0" cy="-96" rx="48" ry="40" fill="url(#cyan)"/></g>`;}
+
+/* ---------- Sala ---------- */
+(function(){
+ const s=[defs];
+ // pared de fondo
+ s.push(`<rect width="960" height="600" fill="#0b0a0d"/><rect y="0" width="960" height="190" fill="url(#panel)"/><rect y="176" width="960" height="14" fill="url(#brass)"/><rect y="0" width="960" height="10" fill="url(#brass)"/>`);
+ // tapices
+ [[70],[760]].forEach(([x])=>s.push(`<g transform="translate(${x} 26)"><rect width="130" height="140" fill="url(#velvet)" stroke="#c8993e" stroke-width="4"/><rect x="10" y="10" width="110" height="120" fill="none" stroke="#c8993e" stroke-opacity=".6"/><text x="65" y="84" text-anchor="middle" font-family="Cardo, Georgia, serif" font-size="44" fill="#d6a84a" fill-opacity=".85">XIII</text></g>`));
+ // arco del ascensor
+ s.push(`<g transform="translate(480 0)">
+   <path d="M-96,190 V70 Q-96,-6 0,-6 Q96,-6 96,70 V190Z" fill="#100a09" stroke="url(#brassV)" stroke-width="10"/>
+   <path d="M-76,190 V74 Q-76,14 0,14 Q76,14 76,74 V190Z" fill="#1c1411"/>
+   <rect x="-70" y="30" width="140" height="160" fill="url(#cyan)" opacity=".5"/>
+   ${[-60,-40,-20,0,20,40,60].map(x=>`<path d="M${x},190 L${x+20},150 L${x},110 L${x-20},70 M${x},190 L${x-20},150 L${x},110 L${x+20},70" stroke="#c8993e" stroke-width="2.4" fill="none" opacity=".9"/>`).join('')}
+   <circle cx="0" cy="-30" r="30" fill="#14100e" stroke="url(#brassV)" stroke-width="5"/><text x="0" y="-21" text-anchor="middle" font-family="Cardo, Georgia, serif" font-size="26" font-weight="700" fill="#6ff0ff" filter="url(#glow)">13</text></g>`);
+ s.push(bobina(330,186,.9),bobina(630,186,.9));
+ s.push(bolt(330,92,480,-6,3),bolt(630,92,480,-6,5),bolt(330,92,300,60,8,1.4),bolt(630,92,660,60,9,1.4));
+ // suelo
+ s.push(`<rect y="190" width="960" height="410" fill="url(#marble)"/><rect y="190" width="960" height="60" fill="#000" opacity=".28"/>`);
+ // alfombra
+ s.push(`<rect x="250" y="262" width="460" height="300" rx="10" fill="#5a1424" stroke="#c8993e" stroke-width="6"/><rect x="266" y="278" width="428" height="268" rx="6" fill="none" stroke="#c8993e" stroke-opacity=".6" stroke-width="2" stroke-dasharray="3 7"/>`);
+ // cono de luz de la cámara
+ s.push(`<ellipse cx="480" cy="410" rx="130" ry="70" fill="#6ff0ff" opacity=".13"/>`);
+ // mesa de examen
+ s.push(`<g transform="translate(480 408)"><ellipse cx="0" cy="26" rx="110" ry="30" fill="#000" opacity=".45"/>
+   <ellipse cx="0" cy="12" rx="106" ry="48" fill="#2a1b15" stroke="#c8993e" stroke-width="4"/>
+   <ellipse cx="0" cy="6" rx="92" ry="40" fill="#14606a"/><ellipse cx="0" cy="6" rx="92" ry="40" fill="none" stroke="#6ff0ff" stroke-opacity=".5" stroke-width="2"/>
+   <g transform="translate(-30 4)">${[0,1,2,3,4].map(i=>`<rect x="${i*13-2}" y="-14" width="22" height="32" rx="3" fill="#f6efe0" stroke="#7a1d33" stroke-width="2" transform="rotate(${-20+i*10} ${i*13+9} 14)"/>`).join('')}</g>
+   <rect x="46" y="-6" width="20" height="14" rx="2" fill="#c8993e"/></g>`);
+ // cámara cenital
+ s.push(`<g transform="translate(480 300)"><path d="M0,-110 V-40" stroke="url(#brass)" stroke-width="8"/><rect x="-34" y="-122" width="68" height="14" rx="5" fill="url(#brass)"/>
+   <circle cx="0" cy="-30" r="22" fill="#15131a" stroke="url(#brassV)" stroke-width="6"/><circle cx="0" cy="-30" r="11" fill="#6ff0ff" filter="url(#glow)"/><circle cx="-4" cy="-34" r="3.5" fill="#fff"/></g>`);
+ // tribunal (izquierda)
+ s.push(`<g><rect x="80" y="300" width="130" height="30" rx="4" fill="#2a1b15" stroke="#c8993e" stroke-width="3"/>${[100,145,190].map(x=>`<rect x="${x-9}" y="305" width="18" height="10" fill="#c8993e"/>`).join('')}
+   ${silla(110,360)}${silla(150,360)}${silla(190,360)}${persona(110,336,'#2a2f4a')}${persona(150,336,'#3a2438')}${persona(190,336,'#23403f')}
+   <rect x="95" y="269" width="100" height="22" rx="11" fill="#0b0a0d" opacity=".85"/><text x="145" y="285" text-anchor="middle" font-family="Cardo, Georgia, serif" font-size="14" fill="#d6a84a" letter-spacing="3">TRIBUNAL</text></g>`);
+ // público (derecha)
+ s.push(`<g>${[0,1,2].map(r=>[0,1,2,3].map(c=>silla(740+c*46,330+r*52,1,'url(#velvet)')).join('')).join('')}
+   ${persona(786,338,'#4a3320',false)}${persona(832,390,'#2c3e5a')}${persona(740,442,'#5a2a2a',false)}
+   <rect x="755" y="280" width="90" height="22" rx="11" fill="#0b0a0d" opacity=".85"/><text x="800" y="296" text-anchor="middle" font-family="Cardo, Georgia, serif" font-size="14" fill="#d6a84a" letter-spacing="3">PÚBLICO</text></g>`);
+ // mago examinado
+ s.push(persona(480,372,'#7a1d33'));
+ // candelabros y marco
+ s.push(candelabro(40,230),candelabro(920,230),candelabro(60,560),candelabro(900,560));
+ s.push(`<rect x="1" y="1" width="958" height="598" fill="none" stroke="#c8993e" stroke-opacity=".35"/>`);
+ document.getElementById('room').innerHTML=s.join('');
+})();
+
+/* ---------- Ascensor (alzado) ---------- */
+(function(){
+ const s=[defs];
+ s.push(`<rect width="360" height="520" fill="#0d0b0e"/><ellipse cx="180" cy="470" rx="150" ry="22" fill="#000" opacity=".5"/>`);
+ s.push(bobina(70,150,1.2),bobina(290,150,1.2));
+ s.push(bolt(70,30,180,12,21,2.4),bolt(290,30,180,12,22,2.4),bolt(70,30,40,4,23,1.5),bolt(290,30,320,4,24,1.5));
+ // marco y arco
+ s.push(`<path d="M50,470 V190 Q50,60 180,60 Q310,60 310,190 V470Z" fill="url(#brass)"/>
+   <path d="M66,470 V194 Q66,78 180,78 Q294,78 294,194 V470Z" fill="#150f0e"/>
+   <path d="M76,470 V196 Q76,90 180,90 Q284,90 284,196 V470Z" fill="#241815"/>
+   <rect x="76" y="200" width="208" height="270" fill="url(#cyan)" opacity=".4"/>`);
+ // puerta de tijera
+ let g='';for(let i=0;i<5;i++){const x=96+i*42;g+=`<path d="M${x},470 L${x+42},410 L${x},350 L${x+42},290 L${x},230 M${x+42},470 L${x},410 L${x+42},350 L${x},290 L${x+42},230" stroke="#c8993e" stroke-width="3.2" fill="none"/>`;}
+ s.push(g);
+ // reloj indicador
+ const cx=180,cy=118,r=44; const marks=[[0,'0'],[13,'13'],[40,'40'],[60,'60'],[75,'75'],[90,'90'],[100,'100']]; let m='';
+ marks.forEach(([n,l])=>{const a=Math.PI*(1-n/100); const x=cx+Math.cos(a)*(r-12), y=cy-Math.sin(a)*(r-12); const x2=cx+Math.cos(a)*(r-3), y2=cy-Math.sin(a)*(r-3);
+   m+=`<line x1="${x2.toFixed(1)}" y1="${y2.toFixed(1)}" x2="${(cx+Math.cos(a)*(r-8)).toFixed(1)}" y2="${(cy-Math.sin(a)*(r-8)).toFixed(1)}" stroke="${n===13?'#6ff0ff':'#e8c36a'}" stroke-width="2"/><text x="${(cx+Math.cos(a)*(r+10)).toFixed(1)}" y="${(cy-Math.sin(a)*(r+10)+3).toFixed(1)}" text-anchor="middle" font-family="Cardo, Georgia, serif" font-size="10" fill="${n===13?'#6ff0ff':'#e8c36a'}">${l}</text>`;});
+ const an=Math.PI*(1-13/100);
+ s.push(`<path d="M${cx-r},${cy} A${r},${r} 0 0 1 ${cx+r},${cy}Z" fill="#100c0b" stroke="url(#brassV)" stroke-width="5"/>${m}
+   <line x1="${cx}" y1="${cy}" x2="${(cx+Math.cos(an)*(r-8)).toFixed(1)}" y2="${(cy-Math.sin(an)*(r-8)).toFixed(1)}" stroke="#6ff0ff" stroke-width="3" stroke-linecap="round" filter="url(#glow)"/><circle cx="${cx}" cy="${cy}" r="5" fill="url(#brassV)"/>`);
+ // botonera
+ s.push(`<g>${[0,1,2].map(i=>`<circle cx="${302}" cy="${210+i*30}" r="8" fill="${i===1?'#6ff0ff':'#c8993e'}" ${i===1?'filter="url(#glow)"':''} stroke="#6e4f1c" stroke-width="2"/>`).join('')}</g>`);
+ s.push(`<rect x="40" y="466" width="280" height="14" rx="3" fill="url(#brass)"/>`);
+ document.getElementById('lift').innerHTML=s.join('');
+})();
+</script>
+</body>
+</html>
