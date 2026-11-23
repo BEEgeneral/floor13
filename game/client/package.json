@@ -1,0 +1,4 @@
+{ "name": "@floor13/client", "version": "0.1.0", "type": "module",
+  "scripts": { "dev": "vite --host", "build": "vite build" },
+  "dependencies": { "@floor13/shared": "*", "phaser": "4.2.1", "@colyseus/sdk": "0.18.10" },
+  "devDependencies": { "vite": "8.3.8" } }

@@ -6,3 +6,6 @@ smoke.png
 .env
 .env.*
 __pycache__/
+game/server/data/
+game/node_modules/
+game/client/dist/
