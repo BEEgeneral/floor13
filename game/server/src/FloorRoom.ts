@@ -8,7 +8,8 @@ export const ctx = { store: null as unknown as Store };   // se rellena al arran
 
 export function publicFields(p: Profile) {
   const level = p.stats ? levelFromStats(p.stats) : 0;
-  return { level: p.stats ? level : -1, tier: p.stats ? tierFromLevel(level) : 'antesala', rank: p.stats ? rankName(level) : 'Sin examinar' };
+  const st = p.stats ?? { tec: -1, pre: -1, cre: -1, ens: -1 };
+  return { ...st, level: p.stats ? level : -1, tier: p.stats ? tierFromLevel(level) : 'antesala', rank: p.stats ? rankName(level) : 'Sin examinar' };
 }
 
 type Meta = { profileId: string; lastT: number };

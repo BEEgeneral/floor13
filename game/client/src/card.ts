@@ -1,0 +1,235 @@
+// @ts-nocheck
+/* Carta de mago generada desde datos (SVG). Portada de docs/diseno/carta/index.html. */
+const PESOS = { tec: 0.30, pre: 0.30, cre: 0.25, ens: 0.15 };
+const ATTRS = [
+  { k: 'tec', label: 'TÉCNICA',      glyph: 'dedos' },
+  { k: 'pre', label: 'PRESENTACIÓN', glyph: 'telon' },
+  { k: 'cre', label: 'CREATIVIDAD',  glyph: 'chispa' },
+  { k: 'ens', label: 'ENSEÑANZA',    glyph: 'libro' },
+];
+const ESPECIALIDAD = { naipe: 'CARTOMAGIA', moneda: 'MICROMAGIA', ojo: 'MENTALISMO DE CERCA', cubilete: 'CERCA GENERAL' };
+const BANDERAS = {
+  ES: { dir: 'h', cols: ['#aa151b', '#f1bf00', '#aa151b'], pesos: [1, 2, 1] },
+  AR: { dir: 'h', cols: ['#74acdf', '#ffffff', '#74acdf'], pesos: [1, 1, 1] },
+  MX: { dir: 'v', cols: ['#006847', '#ffffff', '#ce1126'], pesos: [1, 1, 1] },
+};
+
+export const TIERS = {
+  bronce: { label: 'BRONCE', frameA: '#f0b184', frameB: '#8a5a38', top: '#4a3326', bot: '#1d1411', glow: '#ff9a4d', glow2: '#d9562b', text: '#f6dcc0', sigil: '#e0a070' },
+  plata:  { label: 'PLATA',  frameA: '#f2f6fb', frameB: '#8794a6', top: '#33404f', bot: '#141a22', glow: '#9cc0ff', glow2: '#5b78d6', text: '#f1f5fa', sigil: '#cfd8e3' },
+  oro:    { label: 'ORO',    frameA: '#ffe08a', frameB: '#b8862b', top: '#43361f', bot: '#1b1409', glow: '#ffbe5c', glow2: '#e0742e', text: '#fff1c9', sigil: '#f2c14e' },
+  neon:   { label: 'NEÓN',   frameA: '#8ff6ff', frameB: '#1fa9c4', top: '#14606a', bot: '#06242a', glow: '#ff7a63', glow2: '#e0457b', text: '#f6dfa0', sigil: '#5fe9ff' },
+  blanco: { label: 'EN PROGRESO', frameA: '#a9b6c4', frameB: '#5b6672', top: '#272f38', bot: '#12161a', glow: '#6b7886', glow2: '#3b4550', text: '#b9c3cf', sigil: '#7d8a99' },
+};
+
+/* ---------- Utilidades ---------- */
+export const nivel = s => Math.round(Object.keys(PESOS).reduce((a, k) => a + PESOS[k] * s[k], 0));
+export const tramo = n => n >= 90 ? 'neon' : n >= 75 ? 'oro' : n >= 60 ? 'plata' : 'bronce';
+const hex = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+const mix = (a, b, t) => '#' + hex(a).map((v, i) => Math.round(v + (hex(b)[i] - v) * t).toString(16).padStart(2, '0')).join('');
+function rng(seed) { return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+
+const SHIELD = 'M200,20 L340,56 Q348,58 348,68 L348,470 Q348,480 340,487 L214,540 Q200,546 186,540 L60,487 Q52,480 52,470 L52,68 Q52,58 60,56 Z';
+
+/* ---------- Iconos (caja de -16 a 16) ---------- */
+const ICONOS = {
+  naipe: '<rect x="-10" y="-14" width="20" height="28" rx="3.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M0,-7 L6,0 L0,7 L-6,0Z" fill="currentColor"/>',
+  moneda: '<circle r="13" fill="none" stroke="currentColor" stroke-width="2.2"/><circle r="7.5" fill="none" stroke="currentColor" stroke-width="1.6"/><circle r="1.8" fill="currentColor"/>',
+  ojo: '<path d="M-15,0 Q0,-14 15,0 Q0,14 -15,0Z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><circle r="5.2" fill="none" stroke="currentColor" stroke-width="2"/><circle r="1.9" fill="currentColor"/>',
+  cubilete: '<path d="M-10,-12 L10,-12 L7,12 L-7,12Z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><path d="M-9,-6 H9" stroke="currentColor" stroke-width="1.6"/><circle cx="13" cy="9" r="3.6" fill="currentColor"/>',
+};
+const GLIFOS = { // caja de -8 a 8
+  dedos: '<path d="M-5,6 V-1 M-2,6 V-5 M1,6 V-6.5 M4,6 V-3 M-5,6 H4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
+  telon: '<path d="M-7,-6 H7 M-6,-6 Q-2,0 -6,6 M6,-6 Q2,0 6,6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
+  chispa: '<path d="M0,-8 L2,-2 L8,0 L2,2 L0,8 L-2,2 L-8,0 L-2,-2Z" fill="currentColor"/>',
+  libro: '<path d="M-8,-5 Q-4,-7 0,-4 Q4,-7 8,-5 V5 Q4,3 0,6 Q-4,3 -8,5Z M0,-4 V6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>',
+  verificado: '<path d="M-5.5,0.5 L-1.5,4.5 L6,-4" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>',
+  ensena: '<path d="M-8,-5 Q-4,-7 0,-4 Q4,-7 8,-5 V5 Q4,3 0,6 Q-4,3 -8,5Z M0,-4 V6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>',
+  fundador: '<path d="M-7,5 L-7,-3 L-3.5,0 L0,-6 L3.5,0 L7,-3 L7,5Z" fill="currentColor"/>',
+};
+
+/* ---------- Avatar (vector) ---------- */
+function avatar(blank) {
+  const c = blank
+    ? { jacket: '#3a444f', lapel: '#313a44', shirt: '#46515c', skin: '#46515c', hair: '#2c343c', bow: '#2a323a' }
+    : { jacket: '#8f1f45', lapel: '#5e1230', shirt: '#f4efe6', skin: '#e6b68f', hair: '#2b1c16', bow: '#15151a' };
+  const cara = blank ? '' : `
+    <ellipse cx="214" cy="150" rx="2.6" ry="3.2" fill="#2a1d17"/><ellipse cx="236" cy="150" rx="2.6" ry="3.2" fill="#2a1d17"/>
+    <path d="M208,142 Q214,139 220,141 M230,141 Q236,139 242,142" fill="none" stroke="#2a1d17" stroke-width="2" stroke-linecap="round"/>
+    <path d="M217,166 Q225,171 233,166" fill="none" stroke="#a5604a" stroke-width="2" stroke-linecap="round"/>`;
+  return `
+    <path d="M166,240 L152,330" stroke="${c.jacket}" stroke-width="28" stroke-linecap="round"/>
+    <path d="M148,330 L154,238 Q166,214 205,208 L245,208 Q284,214 296,238 L302,330 Z" fill="${c.jacket}"/>
+    <rect x="212" y="168" width="26" height="44" rx="9" fill="${c.skin}"/>
+    <path d="M204,208 L225,268 L246,208 Z" fill="${c.shirt}"/>
+    <path d="M204,208 L225,268 L196,250 L186,222 Z" fill="${c.lapel}"/>
+    <path d="M246,208 L225,268 L254,250 L264,222 Z" fill="${c.lapel}"/>
+    <path d="M225,215 L210,207 L210,223 Z M225,215 L240,207 L240,223 Z" fill="${c.bow}"/><circle cx="225" cy="215" r="3.2" fill="${c.bow}"/>
+    <ellipse cx="225" cy="148" rx="29" ry="35" fill="${c.skin}"/>
+    <path d="M195,146 Q192,108 225,106 Q258,108 255,146 Q250,126 225,124 Q200,126 195,146Z" fill="${c.hair}"/>
+    ${cara}
+    <path d="M284,236 L318,214" stroke="${c.jacket}" stroke-width="28" stroke-linecap="round"/>
+    <circle cx="326" cy="206" r="13" fill="${blank ? '#4a5560' : '#f7f4ee'}"/>
+    <line x1="326" y1="206" x2="346" y2="168" stroke="${blank ? '#3a444f' : '#16161a'}" stroke-width="4" stroke-linecap="round"/>
+    ${blank ? '' : '<line x1="342" y1="175" x2="346" y2="168" stroke="#fff" stroke-width="4" stroke-linecap="round"/>'}`;
+}
+
+
+/* ---------- Hueco de foto: retrato con luz de estudio (aquí irá la foto real del mago) ---------- */
+function foto(blank, id) {
+  const c = blank
+    ? { bg1: '#3a434d', bg2: '#1a2026', skin1: '#59636e', skin2: '#2e353d', suit: '#2c333b', shirt: '#4a545f', hair: '#262d34' }
+    : { bg1: '#6f8791', bg2: '#17262c', skin1: '#e9bf9c', skin2: '#a9734f', suit: '#17191f', shirt: '#eceae4', hair: '#2a1d16' };
+  return `
+  <defs>
+    <radialGradient id="${id('pbg')}" cx="225" cy="150" r="230" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="${c.bg1}"/><stop offset="1" stop-color="${c.bg2}"/></radialGradient>
+    <linearGradient id="${id('skin')}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${c.skin1}"/><stop offset="1" stop-color="${c.skin2}"/></linearGradient>
+    <linearGradient id="${id('suit')}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${c.suit}"/><stop offset=".45" stop-color="${mix(c.suit, '#ffffff', .12)}"/><stop offset="1" stop-color="${c.suit}"/></linearGradient>
+    <filter id="${id('soft')}"><feGaussianBlur stdDeviation="1.6"/></filter>
+    <filter id="${id('soft2')}"><feGaussianBlur stdDeviation="7"/></filter>
+  </defs>
+  <rect x="40" y="10" width="320" height="340" fill="url(#${id('pbg')})"/>
+  <ellipse cx="225" cy="340" rx="95" ry="14" fill="#000" opacity=".35" filter="url(#${id('soft2')})"/>
+  <path d="M138,340 L146,262 Q152,226 198,212 L252,212 Q298,226 304,262 L312,340 Z" fill="url(#${id('suit')})"/>
+  <path d="M204,212 L225,282 L246,212 Z" fill="${c.shirt}"/>
+  <path d="M204,212 L225,282 L190,262 L180,228 Z M246,212 L225,282 L260,262 L270,228 Z" fill="#000" opacity=".35"/>
+  <path d="M225,224 L212,216 L212,232 Z M225,224 L238,216 L238,232 Z" fill="#0c0c10"/><circle cx="225" cy="224" r="3" fill="#0c0c10"/>
+  <rect x="211" y="172" width="28" height="46" rx="10" fill="url(#${id('skin')})"/>
+  <rect x="211" y="196" width="28" height="22" fill="#000" opacity=".22" filter="url(#${id('soft')})"/>
+  <ellipse cx="225" cy="146" rx="31" ry="38" fill="url(#${id('skin')})"/>
+  <path d="M193,142 Q190,102 225,100 Q260,102 257,142 Q253,122 238,117 Q218,112 200,122 Q195,130 193,142Z" fill="${c.hair}"/>
+  <ellipse cx="238" cy="150" rx="14" ry="30" fill="#000" opacity=".18" filter="url(#${id('soft2')})"/>
+  ${blank ? '' : `
+  <ellipse cx="213" cy="146" rx="3.4" ry="2.2" fill="#fff" opacity=".9"/><circle cx="213" cy="146" r="1.8" fill="#2b1d14"/>
+  <ellipse cx="237" cy="146" rx="3.4" ry="2.2" fill="#fff" opacity=".9"/><circle cx="237" cy="146" r="1.8" fill="#2b1d14"/>
+  <path d="M206,138 Q213,134 220,137 M230,137 Q237,134 244,138" fill="none" stroke="#2a1d16" stroke-width="2" stroke-linecap="round"/>
+  <path d="M225,148 Q222,158 226,160" fill="none" stroke="#a5694a" stroke-width="1.6" stroke-linecap="round" opacity=".7"/>
+  <path d="M215,170 Q225,175 235,170" fill="none" stroke="#9a5646" stroke-width="2.2" stroke-linecap="round"/>`}`;
+}
+
+/* ---------- Carta ---------- */
+export function carta(m, i) {
+  const blank = !m.stats;
+  const ovr = blank ? null : nivel(m.stats);
+  const key = blank ? 'blanco' : tramo(ovr);
+  const t = TIERS[key];
+  const R = rng(1000 + i * 77);
+  const bodyAt = y => mix(t.top, t.bot, Math.min(1, Math.max(0, (y - 20) / 526)));
+  const fade = bodyAt(322);
+  const bandera = BANDERAS[m.pais];
+  const neon = key === 'neon';
+
+  // partículas
+  let particulas = '';
+  for (let n = 0; n < 26; n++) {
+    const x = R() * 400, y = R() * 560, r = 0.8 + R() * 2.4;
+    particulas += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(1)}" fill="${n % 3 ? t.glow : t.sigil}" opacity="${(0.35 + R() * 0.55).toFixed(2)}"/>`;
+  }
+  // rayos detrás del mago
+  let rayos = '';
+  for (let a = 0; a < 18; a++) {
+    const a0 = (a / 18) * Math.PI * 2, a1 = a0 + Math.PI / 36;
+    const p = (ang, rad) => `${(225 + Math.cos(ang) * rad).toFixed(1)},${(160 + Math.sin(ang) * rad).toFixed(1)}`;
+    rayos += `<polygon points="225,160 ${p(a0, 340)} ${p(a1, 340)}" fill="${t.glow}" opacity=".10"/>`;
+  }
+  // sello mágico (círculo con marcas)
+  const sello = (cx, cy, r, op) => {
+    let marcas = '';
+    for (let k = 0; k < 12; k++) {
+      const a = (k / 12) * Math.PI * 2;
+      marcas += `<line x1="${(cx + Math.cos(a) * (r - 5)).toFixed(1)}" y1="${(cy + Math.sin(a) * (r - 5)).toFixed(1)}" x2="${(cx + Math.cos(a) * r).toFixed(1)}" y2="${(cy + Math.sin(a) * r).toFixed(1)}"/>`;
+    }
+    const e = [0, 1, 2, 3, 4].map(k => { const a = -Math.PI / 2 + k * 4 * Math.PI / 5; return `${(cx + Math.cos(a) * (r - 9)).toFixed(1)},${(cy + Math.sin(a) * (r - 9)).toFixed(1)}`; }).join(' ');
+    return `<g fill="none" stroke="${t.sigil}" stroke-width="1.6" opacity="${op}"><circle cx="${cx}" cy="${cy}" r="${r}"/><circle cx="${cx}" cy="${cy}" r="${r - 6}" stroke-width="1"/>${marcas}<polygon points="${e}" stroke-width="1.2"/></g>`;
+  };
+
+  const filas = ATTRS.map((a, n) => {
+    const y = 392 + n * 32;
+    const v = blank ? '—' : m.stats[a.k];
+    return `
+      <g transform="translate(0 ${y})">
+        <circle cx="127" cy="0" r="12" fill="${t.frameB}" opacity=".35"/>
+        <circle cx="127" cy="0" r="12" fill="none" stroke="${t.frameA}" stroke-width="1.4" opacity=".9"/>
+        <g transform="translate(127 0)" color="${t.frameA}">${GLIFOS[a.glyph]}</g>
+        <text x="149" y="5" class="lbl" fill="${t.text}">${a.label}</text>
+        <text x="286" y="8" class="num" text-anchor="end" fill="${t.text}">${v}</text>
+        <line x1="112" y1="16" x2="288" y2="16" stroke="${t.frameA}" stroke-opacity=".25" stroke-width="1"/>
+      </g>`;
+  }).join('');
+
+  const sellos = m.sellos.slice(0, 3).map((s, n) => `
+      <g transform="translate(${86 + n * 26} 298)">
+        <circle r="10" fill="${t.frameB}" opacity=".5"/><circle r="10" fill="none" stroke="${t.frameA}" stroke-width="1.3"/>
+        <g color="${t.frameA}" transform="scale(.8)">${GLIFOS[s]}</g>
+      </g>`).join('');
+
+  const banderaSVG = (() => {
+    if (!bandera) return '';
+    const tot = bandera.pesos.reduce((a, b) => a + b, 0);
+    let acc = 0, out = '';
+    bandera.cols.forEach((col, n) => {
+      const parte = bandera.pesos[n] / tot;
+      out += bandera.dir === 'h'
+        ? `<rect x="76" y="${(190 + acc * 26).toFixed(1)}" width="40" height="${(parte * 26 + .3).toFixed(1)}" fill="${col}"/>`
+        : `<rect x="${(76 + acc * 40).toFixed(1)}" y="190" width="${(parte * 40 + .3).toFixed(1)}" height="26" fill="${col}"/>`;
+      acc += parte;
+    });
+    return out + `<rect x="76" y="190" width="40" height="26" fill="none" stroke="${t.frameA}" stroke-width="1.4" rx="2"/>`;
+  })();
+
+  const id = s => `${s}${i}`;
+  return `
+<svg viewBox="0 0 400 560" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Carta de ${m.name}${blank ? ', sin examinar' : ', nivel ' + ovr + ', ' + t.label}">
+  <style>
+    .lbl { font: 600 13px 'Fira Sans', 'DejaVu Sans', sans-serif; letter-spacing: .8px; }
+    .num { font: 400 25px 'Anton', 'Fira Sans', sans-serif; }
+    .big { font: 400 58px 'Anton', 'Fira Sans', sans-serif; }
+    .nom { font: 700 27px 'Cardo', Georgia, serif; letter-spacing: 2.4px; }
+    .sub { font: 600 11px 'Fira Sans', sans-serif; letter-spacing: 3px; }
+    .tag { font: 600 11px 'Fira Sans', sans-serif; letter-spacing: 3px; }
+  </style>
+  <defs>
+    <linearGradient id="${id('body')}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${t.top}"/><stop offset="1" stop-color="${t.bot}"/></linearGradient>
+    <linearGradient id="${id('frame')}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${t.frameA}"/><stop offset=".55" stop-color="${t.frameB}"/><stop offset="1" stop-color="${t.frameA}"/></linearGradient>
+    <radialGradient id="${id('burst')}" cx="225" cy="165" r="250" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="${t.glow}" stop-opacity=".9"/><stop offset=".45" stop-color="${t.glow2}" stop-opacity=".35"/><stop offset="1" stop-color="${t.glow2}" stop-opacity="0"/></radialGradient>
+    <radialGradient id="${id('halo')}" cx="225" cy="150" r="190" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="${t.glow}" stop-opacity=".75"/><stop offset=".6" stop-color="${t.glow2}" stop-opacity=".22"/><stop offset="1" stop-color="${t.glow2}" stop-opacity="0"/></radialGradient>
+    <linearGradient id="${id('fade')}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${fade}" stop-opacity="0"/><stop offset="1" stop-color="${fade}" stop-opacity="1"/></linearGradient>
+    <linearGradient id="${id('panel')}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity="0"/><stop offset=".1" stop-color="#000" stop-opacity=".55"/><stop offset="1" stop-color="#000" stop-opacity=".62"/></linearGradient>
+    <linearGradient id="${id('flame')}" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#fff2c2"/><stop offset=".45" stop-color="${t.glow}"/><stop offset="1" stop-color="${t.glow2}" stop-opacity=".1"/></linearGradient>
+    <linearGradient id="${id('sheen')}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".16"/><stop offset=".35" stop-color="#fff" stop-opacity="0"/></linearGradient>
+    <clipPath id="${id('clip')}"><path d="${SHIELD}"/></clipPath>
+    <filter id="${id('blur')}" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="9"/></filter>
+    <filter id="${id('glow')}" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="${neon ? 5 : 3}" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+
+  <!-- Escudo -->
+  <path d="${SHIELD}" fill="url(#${id('body')})" ${neon ? `filter="url(#${id('glow')})"` : ''}/>
+  <g clip-path="url(#${id('clip')})">
+    <path d="${SHIELD}" fill="url(#${id('body')})"/>
+    ${foto(blank, id)}
+    <rect x="40" y="246" width="320" height="76" fill="url(#${id('fade')})"/>
+    <rect x="40" y="322" width="320" height="230" fill="url(#${id('panel')})"/>
+  </g>
+  <path d="${SHIELD}" fill="none" stroke="url(#${id('frame')})" stroke-width="5" stroke-linejoin="round" ${blank ? 'stroke-dasharray="14 7"' : ''}/>
+  <path d="${SHIELD}" transform="translate(200 283) scale(.945) translate(-200 -283)" fill="none" stroke="${t.frameA}" stroke-opacity=".5" stroke-width="1.4"/>
+
+  <!-- Columna izquierda -->
+  <text x="96" y="${blank ? 116 : 120}" class="big" text-anchor="middle" fill="${t.text}">${blank ? '?' : ovr}</text>
+  <text x="96" y="140" class="tag" text-anchor="middle" fill="${t.frameA}">${blank ? '' : t.label}</text>
+  <g transform="translate(96 166)" color="${t.frameA}">${ICONOS[m.esp]}</g>
+  ${banderaSVG}
+  <g transform="translate(96 244)">
+    <path d="M0,-18 L15,-12 V6 Q15,13 8,17 L0,21 L-8,17 Q-15,13 -15,6 V-12Z" fill="${t.frameB}" opacity=".45"/>
+    <path d="M0,-18 L15,-12 V6 Q15,13 8,17 L0,21 L-8,17 Q-15,13 -15,6 V-12Z" fill="none" stroke="${t.frameA}" stroke-width="1.5"/>
+    <text y="6" text-anchor="middle" fill="${t.text}" style="font: 700 17px 'Cardo', Georgia, serif">${m.escuela[1]}</text>
+  </g>
+  ${sellos}
+
+  <!-- Nombre y atributos -->
+  <text x="200" y="338" class="nom" text-anchor="middle" fill="${t.text}">${m.name.toUpperCase()}</text>
+  <text x="200" y="357" class="sub" text-anchor="middle" fill="${t.frameA}">${blank ? 'EN PROGRESO' : ESPECIALIDAD[m.esp]}</text>
+  <line x1="92" y1="368" x2="308" y2="368" stroke="${t.frameA}" stroke-opacity=".55" stroke-width="1.2"/>
+  ${filas}
+</svg>`;
+}
+
