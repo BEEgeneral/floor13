@@ -3,6 +3,7 @@ import { W, H, FLOORS, type FloorId } from '@floor13/shared';
 import { net, type Session } from './net.ts';
 import { ui } from './ui.ts';
 import { FloorScene } from './scene.ts';
+import { sfx } from './audio.ts';
 import './style.css';
 
 const $ = ui.$, KEY = 'f13token';
@@ -32,6 +33,7 @@ async function enter(id: FloorId): Promise<boolean> {
 async function go(id: FloorId) { const ok = await enter(id); if (ok) ui.toast(`Has llegado a: ${FLOORS[id].name}`, 1800); }
 
 async function start(s: Session) {
+  sfx.unlock();
   session = s; store.set(s.token);
   $('login').hidden = true; $('ui').hidden = false; syncTest();
   if (!(await enter('vestibulo'))) { $('ui').hidden = true; $('login').hidden = false; $('loginErr').textContent = 'No se pudo entrar. ¿Está el servidor encendido?'; }
@@ -63,3 +65,8 @@ async function boot() {
   });
 }
 boot();
+
+addEventListener('keydown', e => {
+  const a = document.activeElement as HTMLElement | null; if (a && ['INPUT', 'SELECT', 'TEXTAREA'].includes(a.tagName)) return;
+  if (e.code === 'KeyM') ui.toast(sfx.toggleMute() ? 'Sonido apagado (M)' : 'Sonido encendido (M)', 1500);
+});

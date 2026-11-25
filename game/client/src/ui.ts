@@ -1,5 +1,6 @@
 import { carta } from './card.ts';
 import type { FloorInfo } from './net.ts';
+import { sfx } from './audio.ts';
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
 let cardN = 0, toastT: number | undefined;
@@ -41,7 +42,7 @@ export const ui = {
         li.onclick = () => { sel = i; draw(); confirm(); }; ul().append(li);
       });
     };
-    const confirm = () => { const f = floors[sel]; if (!f) return; if (!f.allowed) { ui.toast(f.reason ?? 'Esa planta está cerrada'); return; } close(); pick(f); };
+    const confirm = () => { const f = floors[sel]; if (!f) return; if (!f.allowed) { sfx.denied(); ui.toast(f.reason ?? 'Esa planta está cerrada'); return; } sfx.lift(); close(); pick(f); };
     const close = () => { $('elevator').hidden = true; };
     return {
       open: (fl: FloorInfo[], current: string, onPick: (f: FloorInfo) => void) => { floors = fl; pick = onPick; sel = Math.max(0, fl.findIndex(f => f.id !== current)); $('elevator').hidden = false; draw(); },

@@ -35,3 +35,8 @@ button.ghost { background: transparent; } button.x { position: absolute; right: 
 .cardbox { position: relative; width: min(360px, 94vw); text-align: center; } #cardSvg svg { width: 100%; height: auto; } #cardMeta { color: var(--mut); font-size: 13px; margin-top: 4px; }
 .side { position: absolute; right: 12px; top: 56px; width: 270px; max-height: calc(100vh - 110px); overflow: auto; }
 @media (max-width: 700px) { #hints { display: none; } .side { width: calc(100vw - 24px); } }
+
+.modal > .panel { animation: pop .18s ease-out; } @keyframes pop { from { opacity: 0; transform: translateY(8px) scale(.97); } }
+#prompt { animation: pulse 1.4s ease-in-out infinite; border-color: var(--cy); } @keyframes pulse { 50% { box-shadow: 0 0 14px rgba(111,240,255,.55); } }
+#toast { animation: pop .18s ease-out; }
+#floorList li { transition: transform .12s, border-color .12s; } #floorList li.sel { transform: translateX(4px); }
