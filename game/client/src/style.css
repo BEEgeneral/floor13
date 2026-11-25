@@ -1,0 +1,37 @@
+:root { color-scheme: dark; --gold:#e3bb62; --ink:#e8dfcf; --mut:#a79c88; --cy:#6ff0ff; --bg:#0b0a0d; }
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: #050407; color: var(--ink); font-family: 'Fira Sans','DejaVu Sans',system-ui,sans-serif; overflow: hidden; }
+#game { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; }
+#game canvas { display: block; }
+.screen { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; background: radial-gradient(900px 500px at 50% 0%, #2a1318, #0b0a0d 70%); z-index: 10; padding: 16px; }
+.panel { background: rgba(14,11,12,.94); border: 1px solid #5b4524; border-radius: 14px; padding: 20px 22px; width: min(420px, 100%); box-shadow: 0 20px 60px rgba(0,0,0,.6); }
+h1 { font-family: 'Cardo', Georgia, serif; font-size: 36px; margin: 0; color: var(--gold); letter-spacing: 1px; }
+h2 { font-family: 'Cardo', Georgia, serif; margin: 0 0 8px; color: var(--gold); font-size: 22px; }
+.sub { margin: 2px 0 16px; color: var(--mut); } .fine { color: var(--mut); font-size: 12px; margin: 8px 0 0; line-height: 1.4; } .err { color: #ff8a8a; min-height: 1.2em; margin: 8px 0 0; font-size: 13px; }
+label { display: block; font-size: 12px; color: var(--mut); margin: 10px 0 0; } label.chk { display: flex; gap: 8px; align-items: center; font-size: 14px; color: var(--ink); }
+input, select { width: 100%; margin-top: 4px; padding: 9px 10px; background: #17120f; border: 1px solid #3a2c1c; border-radius: 8px; color: var(--ink); font: inherit; font-size: 15px; }
+input[type=checkbox] { width: auto; margin: 0; } input:focus, select:focus, button:focus-visible { outline: 2px solid var(--cy); outline-offset: 1px; }
+.row { display: flex; gap: 10px; } .row > * { flex: 1; } .row4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+button { font: inherit; cursor: pointer; border-radius: 9px; padding: 10px 14px; border: 1px solid #5b4524; color: var(--ink); background: #1b1411; margin-top: 12px; }
+button.primary { background: linear-gradient(#e8c36a, #b8862b); color: #1a1208; font-weight: 700; border-color: #e8c36a; width: 100%; }
+button.ghost { background: transparent; } button.x { position: absolute; right: 8px; top: 0; margin: 0; font-size: 22px; border: 0; padding: 4px 10px; }
+#ui { position: fixed; inset: 0; pointer-events: none; z-index: 5; } #ui > * { pointer-events: auto; }
+#hud { position: absolute; left: 12px; right: 12px; top: 10px; display: flex; justify-content: space-between; pointer-events: none; gap: 8px; }
+.chip { background: rgba(11,10,13,.8); border: 1px solid #5b4524; border-radius: 999px; padding: 6px 14px; font-size: 13px; width: fit-content; }
+.chip b { font-family: 'Cardo', Georgia, serif; color: var(--gold); font-size: 15px; }
+#hints { position: absolute; left: 50%; bottom: 10px; transform: translateX(-50%); font-size: 12px; color: var(--mut); max-width: 94vw; text-align: center; border-radius: 12px; }
+#prompt { position: absolute; left: 50%; bottom: 52px; transform: translateX(-50%); border-color: var(--cy); color: #d8fdff; }
+#toast { position: absolute; left: 50%; top: 58px; transform: translateX(-50%); border-color: #ff8a8a; max-width: 90vw; }
+#chatLog { position: absolute; left: 12px; bottom: 56px; width: min(380px, 80vw); display: flex; flex-direction: column; gap: 4px; pointer-events: none; }
+#chatLog div { background: rgba(11,10,13,.72); border-radius: 10px; padding: 4px 10px; font-size: 13px; animation: fade 14s forwards; } #chatLog b { color: var(--gold); }
+@keyframes fade { 0%, 85% { opacity: 1 } 100% { opacity: 0 } }
+#chatForm { position: absolute; left: 12px; bottom: 52px; width: min(380px, 80vw); } #chatForm input { margin: 0; }
+.modal { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,.5); }
+.modal[hidden], [hidden] { display: none !important; }
+#floorList { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+#floorList li { display: flex; gap: 12px; align-items: center; padding: 10px 12px; border: 1px solid #3a2c1c; border-radius: 10px; background: #17120f; cursor: pointer; }
+#floorList li.sel { border-color: var(--cy); box-shadow: 0 0 0 1px var(--cy) inset; } #floorList li.locked { opacity: .55; cursor: not-allowed; }
+#floorList .num { font-family: 'Cardo', Georgia, serif; font-size: 24px; color: var(--cy); width: 34px; text-align: center; } #floorList .nm { font-weight: 600; } #floorList .sb { font-size: 12px; color: var(--mut); } #floorList .pl { margin-left: auto; font-size: 12px; color: var(--mut); white-space: nowrap; }
+.cardbox { position: relative; width: min(360px, 94vw); text-align: center; } #cardSvg svg { width: 100%; height: auto; } #cardMeta { color: var(--mut); font-size: 13px; margin-top: 4px; }
+.side { position: absolute; right: 12px; top: 56px; width: 270px; max-height: calc(100vh - 110px); overflow: auto; }
+@media (max-width: 700px) { #hints { display: none; } .side { width: calc(100vw - 24px); } }

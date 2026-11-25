@@ -51,11 +51,11 @@ export function floorRoom(floorId: FloorId) {
     /** Validación en el servidor: velocidad máxima y colisiones. Si falla, se devuelve al jugador a su última posición válida. */
     private onPos(client: Client, m: { x: number; y: number; face?: number; moving?: boolean }) {
       const ps = this.state.players.get(client.sessionId); const meta = this.meta.get(client.sessionId); if (!ps || !meta) return;
-      const now = Date.now(), dt = Math.min(1, (now - meta.lastT) / 1000); meta.lastT = now;
+      const now = Date.now(), dt = Math.min(1, (now - meta.lastT) / 1000);   // tiempo desde la última posición aceptada
       const x = Number(m.x), y = Number(m.y);
-      const maxMove = SPEED * Math.max(dt, 0.05) * 1.6 + 6;
+      const maxMove = SPEED * Math.max(dt, 0.1) * 1.6 + 6;
       if (!Number.isFinite(x) || !Number.isFinite(y) || dist({ x, y }, ps) > maxMove || collides(x, y, floor.colliders)) { client.send('corregir', { x: ps.x, y: ps.y }); return; }
-      ps.x = x; ps.y = y; ps.face = m.face === -1 ? -1 : 1; ps.moving = !!m.moving;
+      meta.lastT = now; ps.x = x; ps.y = y; ps.face = m.face === -1 ? -1 : 1; ps.moving = !!m.moving;
     }
 
     private onChat(client: Client, m: { text: string }) {
