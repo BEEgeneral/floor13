@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { W, H, type FloorId } from '@floor13/shared';
+import { W, H, FLOORS, type FloorId } from '@floor13/shared';
 import { net, type Session } from './net.ts';
 import { ui } from './ui.ts';
 import { FloorScene } from './scene.ts';
@@ -29,7 +29,7 @@ async function enter(id: FloorId): Promise<boolean> {
   } catch (e: any) { ui.toast(e.message); return false; }
   finally { switching = false; }
 }
-async function go(id: FloorId) { const ok = await enter(id); if (ok) ui.toast(`Has llegado a la planta «${id}»`, 1800); }
+async function go(id: FloorId) { const ok = await enter(id); if (ok) ui.toast(`Has llegado a: ${FLOORS[id].name}`, 1800); }
 
 async function start(s: Session) {
   session = s; store.set(s.token);

@@ -21,7 +21,7 @@ const LABEL = { fontFamily: 'Georgia, serif', fontSize: '13px', color: '#fff3c4'
 
 export class FloorScene extends Phaser.Scene {
   d!: SceneData; art: any; avs = new Map<string, Av>();
-  me = { x: 0, y: 0, face: 1, moving: false }; sendT = 0; hudT = 0; lightT = 0; ended = false;
+  me = { x: 0, y: 0, face: 1, moving: false }; sendT = 0; lastReal = 0; hudT = 0; lightT = 0; ended = false;
   constructor() { super('floor'); }
   init(d: SceneData) { this.d = d; this.avs = new Map(); this.ended = false; }
 
@@ -90,7 +90,8 @@ export class FloorScene extends Phaser.Scene {
 
   update(time: number, dtms: number) {
     if (this.ended || !this.d.room.state?.players) return;
-    const dt = Math.min(dtms, 50) / 1000, { room, floorId } = this.d, def = FLOORS[floorId], act = poll();
+    const real = performance.now(), dt = Math.min(real - (this.lastReal || real), 100) / 1000; this.lastReal = real;   // Phaser suaviza delta; medimos el tiempo real
+    const { room, floorId } = this.d, def = FLOORS[floorId], act = poll();
     const modal = ui.elevator.isOpen() || ui.card.isOpen() || ui.chatOpen();
 
     // menús y acciones

@@ -11,12 +11,12 @@ async function call<T>(path: string, init?: RequestInit): Promise<T> {
   const r = await fetch(HTTP + '/api' + path, init); const j = await r.json().catch(() => ({}));
   if (!r.ok) throw new Error((j as any).error ?? `Error ${r.status}`); return j as T;
 }
-const json = (body: unknown, token?: string): RequestInit => ({ method: 'POST', headers: { 'content-type': 'application/json', ...(token ? { 'x-token': token } : {}) }, body: JSON.stringify(body) });
+const json = (body: unknown, token?: string): RequestInit => ({ method: 'POST', headers: { 'content-type': 'application/json', ...(token ? { 'authorization': 'Bearer ' + token } : {}) }, body: JSON.stringify(body) });
 
 export const net = {
   login: (body: object) => call<Session>('/login', json(body)),
-  me: (token: string) => call<Session>('/yo', { headers: { 'x-token': token } }),
-  floors: (token: string) => call<FloorInfo[]>('/plantas', { headers: { 'x-token': token } }),
+  me: (token: string) => call<Session>('/yo', { headers: { 'authorization': 'Bearer ' + token } }),
+  floors: (token: string) => call<FloorInfo[]>('/plantas', { headers: { 'authorization': 'Bearer ' + token } }),
   patch: (token: string, body: object) => call<Session>('/prueba/perfil', json(body, token)),
   client: new Client(WS),
   async join(floor: FloorId, token: string): Promise<Room<any>> {

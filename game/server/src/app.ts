@@ -21,7 +21,7 @@ export async function start(opts: AppOptions = {}) {
       const wrap = (fn: (req: express.Request, res: express.Response) => unknown) => async (req: express.Request, res: express.Response) => {
         try { res.json(await fn(req, res)); } catch (e) { const he = e as HttpError; res.status(he.status ?? 500).json({ error: he.message }); }
       };
-      const me = (req: express.Request) => { const s = store.byTokenOrNull(String(req.header('x-token') ?? req.body?.token ?? '')); if (!s) throw new HttpError(401, 'Entrada no válida'); return s; };
+      const me = (req: express.Request) => { const s = store.byTokenOrNull(String(req.header('x-token') ?? req.header('authorization')?.replace(/^Bearer\s+/i, '') ?? req.body?.token ?? '')); if (!s) throw new HttpError(401, 'Entrada no válida'); return s; };
       const view = (s: { token: string; profile: any }) => ({ token: s.token, profile: s.profile, card: { ...publicFields(s.profile) } });
 
       app.get('/api/estado', (_q, res) => res.json({ ok: true, testMode }));
