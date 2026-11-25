@@ -1,7 +1,7 @@
 import { Client, type Room } from '@colyseus/sdk';
 import type { Profile, FloorId } from '@floor13/shared';
 
-const HOST = (import.meta as any).env?.VITE_HOST ?? `${location.hostname}:2567`;
+const HOST = (import.meta as any).env?.VITE_HOST ?? ((import.meta as any).env?.PROD ? location.host : `${location.hostname}:2567`);
 const HTTP = `${location.protocol === 'https:' ? 'https' : 'http'}://${HOST}`, WS = `${location.protocol === 'https:' ? 'wss' : 'ws'}://${HOST}`;
 export interface Card { level: number; tier: string; rank: string; tec: number; pre: number; cre: number; ens: number }
 export interface Session { token: string; profile: Profile; card: Card }

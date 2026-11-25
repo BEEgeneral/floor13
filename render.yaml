@@ -1,0 +1,14 @@
+# Despliegue en Render (plan gratuito): un solo servicio que sirve el cliente y el servidor de juego.
+services:
+  - type: web
+    name: floor13-prueba
+    runtime: node
+    plan: free
+    rootDir: game
+    buildCommand: npm install && npm run build
+    startCommand: npm run start -w server
+    envVars:
+      - key: NODE_VERSION
+        value: 22
+      - key: F13_TEST
+        value: "1"

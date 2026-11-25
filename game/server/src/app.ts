@@ -1,6 +1,7 @@
 import config, { listen } from '@colyseus/tools';
 import { defineRoom, matchMaker } from 'colyseus';
 import express from 'express';
+import { existsSync } from 'node:fs';
 import { FLOORS, FLOOR_ORDER, accessFor, type FloorId, type Role, type Key, type Stats } from '@floor13/shared';
 import { Store, HttpError } from './store.ts';
 import { floorRoom, ctx, publicFields } from './FloorRoom.ts';
@@ -17,6 +18,9 @@ export async function start(opts: AppOptions = {}) {
     rooms,
     initializeExpress: (app: express.Application) => {
       app.use(express.json());
+      // en producción el mismo servidor entrega el cliente compilado (una sola URL)
+      const dist = new URL('../../client/dist', import.meta.url).pathname;
+      if (existsSync(dist)) app.use(express.static(dist));
       app.use((req, res, next) => { res.header('Access-Control-Allow-Origin', '*'); res.header('Access-Control-Allow-Headers', 'content-type, x-token'); res.header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS'); if (req.method === 'OPTIONS') return void res.sendStatus(204); next(); });
       const wrap = (fn: (req: express.Request, res: express.Response) => unknown) => async (req: express.Request, res: express.Response) => {
         try { res.json(await fn(req, res)); } catch (e) { const he = e as HttpError; res.status(he.status ?? 500).json({ error: he.message }); }
