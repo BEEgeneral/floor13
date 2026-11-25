@@ -67,7 +67,7 @@ export class FloorScene extends Phaser.Scene {
 
   drawLight(t: number) {
     const dark = layers.get('dark')!.getContext('2d')!, glow = layers.get('glow')!.getContext('2d')!, arc = layers.get('arcs')!.getContext('2d')!;
-    const lights = this.art.lights(t) as { x: number; y: number; r: number; a: number; c: string }[];
+    const lights = [...(this.art.lights(t) as { x: number; y: number; r: number; a: number; c: string }[]), ...[...this.avs.values()].map(a => ({ x: a.sprite.x, y: a.sprite.y - 30, r: 85, a: .6, c: '255,225,170' }))];   // cada mago lleva un halo de luz
     dark.globalCompositeOperation = 'source-over'; dark.clearRect(0, 0, W, H);
     dark.fillStyle = 'rgba(7,5,12,.62)'; dark.fillRect(0, 0, W, H);
     const v = dark.createRadialGradient(W / 2, H / 2, H * .45, W / 2, H / 2, H * .95); v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(0,0,0,.5)'); dark.fillStyle = v; dark.fillRect(0, 0, W, H);
@@ -87,7 +87,7 @@ export class FloorScene extends Phaser.Scene {
 
   avatar(sid: string, p: any): Av {
     let a = this.avs.get(sid); if (a) return a;
-    const mine = sid === this.d.room.sessionId, key = avatarTexture(this, p.pid, mine);
+    const mine = sid === this.d.room.sessionId, key = avatarTexture(this, p.look);
     const sprite = this.add.sprite(p.x, p.y, key, 0).setOrigin(.5, FEET_Y / FH);
     sprite.setInteractive({ useHandCursor: true });
     sprite.on('pointerdown', () => { const s = this.d.room.state?.players?.get(sid); if (s) ui.card.show(cardOf(s)); });
@@ -108,7 +108,7 @@ export class FloorScene extends Phaser.Scene {
     if (this.ended || !this.d.room.state?.players) return;
     const real = performance.now(), dt = Math.min(real - (this.lastReal || real), 100) / 1000; this.lastReal = real;   // Phaser suaviza delta; medimos el tiempo real
     const { room, floorId } = this.d, def = FLOORS[floorId], act = poll();
-    const modal = ui.elevator.isOpen() || ui.card.isOpen() || ui.chatOpen();
+    const modal = ui.elevator.isOpen() || ui.card.isOpen() || ui.chatOpen() || !ui.$('wardrobe').hidden;
 
     // menús y acciones
     if (ui.elevator.isOpen()) { if (act.up) ui.elevator.move(-1); if (act.down) ui.elevator.move(1); if (act.act) ui.elevator.confirm(); if (act.back) ui.elevator.close(); }

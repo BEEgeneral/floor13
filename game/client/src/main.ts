@@ -4,6 +4,8 @@ import { net, type Session } from './net.ts';
 import { ui } from './ui.ts';
 import { FloorScene } from './scene.ts';
 import { sfx } from './audio.ts';
+import { mountWardrobe } from './wardrobe.ts';
+import { defaultLook } from '@floor13/shared';
 import './style.css';
 
 const $ = ui.$, KEY = 'f13token';
@@ -40,6 +42,13 @@ async function start(s: Session) {
 }
 function syncTest() { if (!session) return; ui.test.fill(session.profile.role, session.profile.keys, session.profile.stats); }
 
+const wardLogin = mountWardrobe($('wardLogin'), defaultLook(String(Math.random())));
+const wardGame = mountWardrobe($('wardBody'), defaultLook('x')); wardGame.stop();
+const wardOpen = () => !$('wardrobe').hidden;
+function openWardrobe() { if (!session) return; wardGame.set(session.profile.look ?? defaultLook(session.profile.id)); wardGame.start(); $('wardrobe').hidden = false; }
+function closeWardrobe() { $('wardrobe').hidden = true; wardGame.stop(); }
+$('wardCancel').onclick = closeWardrobe;
+$('wardSave').onclick = async () => { if (!session) return; try { session = await net.look(session.token, wardGame.get()); closeWardrobe(); await enter(floorId!); ui.toast('Aspecto guardado', 1500); } catch (e: any) { ui.toast(e.message); } };
 ui.onChatSend(text => room?.send('chat', { text }));
 $('cardClose').onclick = () => ui.card.hide();
 $('tClear').onclick = () => { ['tTec', 'tPre', 'tCre', 'tEns'].forEach(i => { ($(i) as HTMLInputElement).value = ''; }); };
@@ -60,7 +69,7 @@ async function boot() {
   $('loginForm').addEventListener('submit', async e => {
     e.preventDefault(); $('loginErr').textContent = '';
     const v = (id: string) => ($(id) as HTMLInputElement).value;
-    try { await start(await net.login({ name: v('fName'), specialty: v('fSpec'), country: v('fCountry'), schoolName: v('fSchool') })); }
+    try { await start(await net.login({ name: v('fName'), specialty: v('fSpec'), country: v('fCountry'), schoolName: v('fSchool'), look: wardLogin.get() })); }
     catch (er: any) { $('loginErr').textContent = er.message; }
   });
 }
@@ -68,5 +77,7 @@ boot();
 
 addEventListener('keydown', e => {
   const a = document.activeElement as HTMLElement | null; if (a && ['INPUT', 'SELECT', 'TEXTAREA'].includes(a.tagName)) return;
+  if (e.code === 'KeyV') { if (wardOpen()) closeWardrobe(); else if (session && !ui.chatOpen() && !ui.elevator.isOpen() && !ui.card.isOpen()) openWardrobe(); }
+  if (e.code === 'Escape' && wardOpen()) closeWardrobe();
   if (e.code === 'KeyM') ui.toast(sfx.toggleMute() ? 'Sonido apagado (M)' : 'Sonido encendido (M)', 1500);
 });

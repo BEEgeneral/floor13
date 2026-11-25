@@ -41,3 +41,13 @@ test('pared: el movimiento se detiene y desliza', () => {
   assert.ok(p.y >= 214 - 1e-9 && p.y <= 214);   // no atraviesa la pared
   const q = step(20, 400, -30, 0, f.colliders); assert.ok(q.x >= 10);
 });
+
+test('aspecto: se normaliza y es estable', async () => {
+  const { normalizeLook, defaultLook, LOOK_SIZES, lookFromString, lookToString } = await import('./look.ts');
+  assert.deepEqual(defaultLook('abc'), defaultLook('abc'));
+  const l = normalizeLook([99, -1, 'x', 2.5, 3, 1, 1], 'abc');
+  l.forEach((v, i) => assert.ok(Number.isInteger(v) && v >= 0 && v < LOOK_SIZES[i]));
+  assert.equal(l[4], 3); assert.equal(l[5], 1);
+  assert.deepEqual(lookFromString(lookToString(l)), l);
+  assert.equal(normalizeLook(null, 'z').length, LOOK_SIZES.length);
+});

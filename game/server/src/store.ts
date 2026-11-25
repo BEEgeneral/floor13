@@ -1,7 +1,7 @@
 import { randomBytes } from 'node:crypto';
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { dirname } from 'node:path';
-import type { Profile, Specialty, Role, Key, Stats } from '@floor13/shared';
+import { normalizeLook, type Profile, type Specialty, type Role, type Key, type Stats } from '@floor13/shared';
 
 export interface Stored { token: string; profile: Profile }
 const SPECIALTIES: Specialty[] = ['naipe', 'moneda', 'ojo', 'cubilete'];
@@ -18,7 +18,7 @@ export class Store {
   all() { return [...this.byToken.values()].map(s => s.profile); }
   byId(id: string) { return [...this.byToken.values()].find(s => s.profile.id === id) ?? null; }
 
-  create(input: { name: string; country?: string; specialty?: string; schoolName?: string }): Stored {
+  create(input: { name: string; country?: string; specialty?: string; schoolName?: string; look?: unknown }): Stored {
     const name = String(input.name ?? '').trim().replace(/\s+/g, ' ');
     if (name.length < 2 || name.length > 24) throw new HttpError(400, 'El nombre debe tener entre 2 y 24 caracteres');
     if (this.nameTaken(name)) throw new HttpError(409, 'Ese nombre ya lo usa otro mago');
@@ -27,16 +27,18 @@ export class Store {
     const profile: Profile = {
       id: randomBytes(6).toString('hex'), name, country: String(input.country ?? 'ES').toUpperCase().slice(0, 2), specialty,
       school: { name: schoolName, letter: schoolName === 'Sin escuela' ? '?' : schoolName[0].toUpperCase() },
-      role: 'visitante', stats: null, keys: [], createdAt: Date.now(),
+      role: 'visitante', stats: null, keys: [], look: [], createdAt: Date.now(),
     };
+    profile.look = normalizeLook(input.look, profile.id);
     const s = { token: randomBytes(24).toString('hex'), profile }; this.byToken.set(s.token, s); this.save(); return s;
   }
   /** Cambia rol, notas o llaves. La comprobación de permisos la hace quien llama. */
-  patch(profileId: string, p: { role?: Role; stats?: Stats | null; keys?: Key[] }) {
+  patch(profileId: string, p: { role?: Role; stats?: Stats | null; keys?: Key[]; look?: unknown }) {
     const s = this.byId(profileId); if (!s) throw new HttpError(404, 'Perfil no encontrado');
     if (p.role) s.profile.role = p.role;
     if (p.stats !== undefined) s.profile.stats = p.stats;
     if (p.keys) s.profile.keys = p.keys;
+    if (p.look !== undefined) s.profile.look = normalizeLook(p.look, s.profile.id);
     this.save(); return s.profile;
   }
 }

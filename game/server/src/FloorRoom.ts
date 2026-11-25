@@ -1,5 +1,5 @@
 import { Room, ServerError, type Client } from 'colyseus';
-import { FLOORS, accessFor, levelFromStats, tierFromLevel, rankName, collides, dist, HEAR_RADIUS, SPEED, type FloorId, type Profile } from '@floor13/shared';
+import { FLOORS, accessFor, normalizeLook, lookToString, levelFromStats, tierFromLevel, rankName, collides, dist, HEAR_RADIUS, SPEED, type FloorId, type Profile } from '@floor13/shared';
 import { FloorState, PlayerState } from './state.ts';
 import type { Store } from './store.ts';
 
@@ -40,7 +40,7 @@ export function floorRoom(floorId: FloorId) {
     onJoin(client: Client, _options: unknown, auth: { profileId: string }) {
       const p = ctx.store.byId(auth.profileId)!.profile;
       const ps = new PlayerState();
-      Object.assign(ps, { pid: p.id, name: p.name, country: p.country, specialty: p.specialty, schoolLetter: p.school.letter, role: p.role, ...publicFields(p) });
+      Object.assign(ps, { pid: p.id, name: p.name, country: p.country, specialty: p.specialty, schoolLetter: p.school.letter, role: p.role, look: lookToString(normalizeLook(p.look, p.id)), ...publicFields(p) });
       ps.x = floor.spawn[0]; ps.y = floor.spawn[1]; ps.face = 1; ps.moving = false; ps.gesture = '';
       this.state.players.set(client.sessionId, ps);
       this.meta.set(client.sessionId, { profileId: p.id, lastT: Date.now() });

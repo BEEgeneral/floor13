@@ -12,6 +12,7 @@ export interface Profile {
   role: Role;
   stats: Stats | null;      // null = sin examinar
   keys: Key[];
+  look?: number[];          // aspecto (ver look.ts)
   createdAt: number;
 }
 export interface PublicCard {

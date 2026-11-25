@@ -29,6 +29,7 @@ export async function start(opts: AppOptions = {}) {
         const found = store.byTokenOrNull(req.body?.token); if (found) return view(found);
         return view(store.create(req.body ?? {}));
       }));
+      app.post('/api/yo/aspecto', wrap(req => { const s = me(req); store.patch(s.profile.id, { look: req.body?.look }); return view(store.byId(s.profile.id)!); }));
       app.get('/api/yo', wrap(req => view(me(req))));
       app.get('/api/plantas', wrap(async req => {
         const s = me(req); const counts = new Map<string, number>();

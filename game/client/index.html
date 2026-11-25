@@ -19,6 +19,7 @@
         <label>Especialidad<select id="fSpec"><option value="naipe">Cartomagia</option><option value="moneda">Micromagia</option><option value="ojo">Mentalismo de cerca</option><option value="cubilete">Cerca general</option></select></label>
         <label>País<select id="fCountry"><option>ES</option><option>MX</option><option>AR</option></select></label>
       </div>
+      <div id="wardLogin" class="ward"></div>
       <label>Escuela o asociación (opcional)<input id="fSchool" maxlength="30" placeholder="Escuela del Alba"></label>
       <button class="primary" type="submit">Entrar al hotel</button>
     </div>
@@ -32,13 +33,14 @@
     <div class="chip" id="hWhere"></div>
     <div class="chip" id="hMe"></div>
   </div>
-  <div id="hints" class="chip">Mover: flechas/WASD · E: ascensor · T: chat · 1: 👏 · 2: ✋ · C: carta · M: sonido · P: pruebas</div>
+  <div id="hints" class="chip">Flechas/WASD · E ascensor · T chat · 1 👏 · 2 ✋ · C carta · V aspecto · M sonido · P pruebas</div>
   <div id="chatLog"></div>
   <form id="chatForm" hidden><input id="chatInput" maxlength="200" placeholder="Escribe y pulsa Enter (solo te oyen los cercanos)" autocomplete="off"></form>
   <div id="prompt" class="chip" hidden></div>
   <div id="toast" class="chip" hidden></div>
 
   <div id="elevator" class="modal" hidden><div class="panel"><h2>Ascensor</h2><ul id="floorList"></ul><p class="fine">↑ ↓ y Enter, o clic · Esc para cerrar</p></div></div>
+  <div id="wardrobe" class="modal" hidden><div class="panel"><h2>Tu aspecto</h2><div id="wardBody" class="ward"></div><div class="row"><button id="wardSave" class="primary">Guardar</button><button id="wardCancel" class="ghost">Cancelar</button></div></div></div>
   <div id="cardPop" class="modal" hidden><div class="panel cardbox"><button id="cardClose" class="ghost x" aria-label="Cerrar">×</button><div id="cardSvg"></div><div id="cardMeta"></div></div></div>
 
   <div id="testPanel" class="panel side" hidden>

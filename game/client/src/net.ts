@@ -17,6 +17,7 @@ export const net = {
   login: (body: object) => call<Session>('/login', json(body)),
   me: (token: string) => call<Session>('/yo', { headers: { 'authorization': 'Bearer ' + token } }),
   floors: (token: string) => call<FloorInfo[]>('/plantas', { headers: { 'authorization': 'Bearer ' + token } }),
+  look: (token: string, look: number[]) => call<Session>('/yo/aspecto', json({ look }, token)),
   patch: (token: string, body: object) => call<Session>('/prueba/perfil', json(body, token)),
   client: new Client(WS),
   async join(floor: FloorId, token: string): Promise<Room<any>> {

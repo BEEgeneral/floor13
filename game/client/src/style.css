@@ -40,3 +40,9 @@ button.ghost { background: transparent; } button.x { position: absolute; right: 
 #prompt { animation: pulse 1.4s ease-in-out infinite; border-color: var(--cy); } @keyframes pulse { 50% { box-shadow: 0 0 14px rgba(111,240,255,.55); } }
 #toast { animation: pop .18s ease-out; }
 #floorList li { transition: transform .12s, border-color .12s; } #floorList li.sel { transform: translateX(4px); }
+
+.ward { margin-top: 10px; } .wprev { display: flex; gap: 12px; align-items: center; } .wprev canvas { width: 108px; height: 156px; background: #100c0e; border: 1px solid #3a2c1c; border-radius: 10px; flex: none; }
+.wrows { flex: 1; min-width: 0; } .wrow { display: grid; grid-template-columns: 78px 26px 1fr 26px; align-items: center; gap: 4px; margin: 3px 0; font-size: 13px; }
+.wrow .wl { color: var(--mut); font-size: 12px; } .wrow button { margin: 0; padding: 2px 0; width: 26px; height: 26px; line-height: 1; } .wv { text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sw { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; border: 1px solid rgba(255,255,255,.3); } .wrand { margin-top: 8px; padding: 6px 10px; font-size: 13px; }
+#login .panel { width: min(460px, 100%); max-height: 100%; overflow: auto; }

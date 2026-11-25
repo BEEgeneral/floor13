@@ -76,3 +76,12 @@ test('el mismo mago no entra dos veces en una planta', async () => {
   const A = (await post('/login', { name: 'Doble' })).json; const r1 = await join('vestibulo', A.token);
   await assert.rejects(() => join('vestibulo', A.token), /otra pestaña/); await r1.leave();
 });
+
+test('el aspecto se elige al entrar, se corrige si es inválido y se puede cambiar', async () => {
+  const a = await post('/login', { name: 'Vera Capa', look: [3, 2, 1, 0, 4, 2, 1] });
+  assert.deepEqual(a.json.profile.look, [3, 2, 1, 0, 4, 2, 1]);
+  const b = await post('/login', { name: 'Raro Look', look: [99, 'x'] });
+  assert.equal(b.json.profile.look.length, 7); assert.ok(b.json.profile.look.every((v: number) => Number.isInteger(v) && v >= 0));
+  const c = await post('/yo/aspecto', { look: [0, 0, 0, 0, 0, 0, 0] }, a.json.token);
+  assert.deepEqual(c.json.profile.look, [0, 0, 0, 0, 0, 0, 0]);
+});
